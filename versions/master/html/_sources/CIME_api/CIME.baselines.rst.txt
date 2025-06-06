@@ -9,13 +9,13 @@ CIME.baselines.performance module
 
 .. automodule:: CIME.baselines.performance
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Module contents
 ---------------
 
 .. automodule:: CIME.baselines
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

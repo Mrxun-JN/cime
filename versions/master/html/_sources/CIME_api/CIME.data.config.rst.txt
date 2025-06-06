@@ -6,5 +6,5 @@ Module contents
 
 .. automodule:: CIME.data.config
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

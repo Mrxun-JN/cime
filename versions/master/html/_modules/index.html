@@ -1,24 +1,24 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Overview: module code &mdash; CIME master documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
-      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=d05bb7fd" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=30d551ce"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../_static/pop_ver.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=30d551ce"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -35,9 +35,6 @@
           <a href="../index.html" class="icon icon-home">
             CIME
           </a>
-              <div class="version">
-                master
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -48,8 +45,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../what_cime/index.html">What is CIME?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../users_guide/index.html">Case Control System Part 1: Basic Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../users_guide/index.html#case-control-system-part-2-configuration-porting-testing-and-use-cases">Case Control System Part 2: Configuration, Porting, Testing and Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/index.html">Using the Case Control System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/index.html#configuring-the-case-control-system">Configuring the Case Control System</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../build_cpl/index.html">Building a Coupled Model with CIME</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../misc_tools/index.html">Miscellaneous Tools</a></li>
 </ul>
@@ -126,6 +123,7 @@
 <li><a href="CIME/SystemTests/system_tests_common.html">CIME.SystemTests.system_tests_common</a></li>
 <li><a href="CIME/SystemTests/system_tests_compare_n.html">CIME.SystemTests.system_tests_compare_n</a></li>
 <li><a href="CIME/SystemTests/system_tests_compare_two.html">CIME.SystemTests.system_tests_compare_two</a></li>
+<li><a href="CIME/SystemTests/test_mods.html">CIME.SystemTests.test_mods</a></li>
 <li><a href="CIME/SystemTests/test_utils/user_nl_utils.html">CIME.SystemTests.test_utils.user_nl_utils</a></li>
 <li><a href="CIME/SystemTests/tsc.html">CIME.SystemTests.tsc</a></li>
 <li><a href="CIME/Tools/generate_cylc_workflow.html">CIME.Tools.generate_cylc_workflow</a></li>
@@ -144,6 +142,7 @@
 <li><a href="CIME/XML/env_case.html">CIME.XML.env_case</a></li>
 <li><a href="CIME/XML/env_mach_pes.html">CIME.XML.env_mach_pes</a></li>
 <li><a href="CIME/XML/env_mach_specific.html">CIME.XML.env_mach_specific</a></li>
+<li><a href="CIME/XML/env_postprocessing.html">CIME.XML.env_postprocessing</a></li>
 <li><a href="CIME/XML/env_run.html">CIME.XML.env_run</a></li>
 <li><a href="CIME/XML/env_test.html">CIME.XML.env_test</a></li>
 <li><a href="CIME/XML/env_workflow.html">CIME.XML.env_workflow</a></li>
@@ -157,6 +156,7 @@
 <li><a href="CIME/XML/namelist_definition.html">CIME.XML.namelist_definition</a></li>
 <li><a href="CIME/XML/pes.html">CIME.XML.pes</a></li>
 <li><a href="CIME/XML/pio.html">CIME.XML.pio</a></li>
+<li><a href="CIME/XML/postprocessing.html">CIME.XML.postprocessing</a></li>
 <li><a href="CIME/XML/stream.html">CIME.XML.stream</a></li>
 <li><a href="CIME/XML/test_reporter.html">CIME.XML.test_reporter</a></li>
 <li><a href="CIME/XML/testlist.html">CIME.XML.testlist</a></li>
@@ -178,7 +178,6 @@
 <li><a href="CIME/case/case_submit.html">CIME.case.case_submit</a></li>
 <li><a href="CIME/case/case_test.html">CIME.case.case_test</a></li>
 <li><a href="CIME/case/check_input_data.html">CIME.case.check_input_data</a></li>
-<li><a href="CIME/case/check_lockedfiles.html">CIME.case.check_lockedfiles</a></li>
 <li><a href="CIME/case/preview_namelists.html">CIME.case.preview_namelists</a></li>
 <li><a href="CIME/code_checker.html">CIME.code_checker</a></li>
 <li><a href="CIME/compare_namelists.html">CIME.compare_namelists</a></li>
@@ -190,6 +189,7 @@
 <li><a href="CIME/expected_fails.html">CIME.expected_fails</a></li>
 <li><a href="CIME/get_tests.html">CIME.get_tests</a></li>
 <li><a href="CIME/get_timing.html">CIME.get_timing</a></li>
+<li><a href="CIME/gitinterface.html">CIME.gitinterface</a></li>
 <li><a href="CIME/hist_utils.html">CIME.hist_utils</a></li>
 <li><a href="CIME/jenkins_generic_job.html">CIME.jenkins_generic_job</a></li>
 <li><a href="CIME/locked_files.html">CIME.locked_files</a></li>
@@ -202,6 +202,7 @@
 <li><a href="CIME/scripts/query_config.html">CIME.scripts.query_config</a></li>
 <li><a href="CIME/scripts/query_testlists.html">CIME.scripts.query_testlists</a></li>
 <li><a href="CIME/simple_compare.html">CIME.simple_compare</a></li>
+<li><a href="CIME/status.html">CIME.status</a></li>
 <li><a href="CIME/test_scheduler.html">CIME.test_scheduler</a></li>
 <li><a href="CIME/test_status.html">CIME.test_status</a></li>
 <li><a href="CIME/test_utils.html">CIME.test_utils</a></li>
@@ -231,19 +232,24 @@
 <li><a href="CIME/tests/test_unit_bless_test_results.html">CIME.tests.test_unit_bless_test_results</a></li>
 <li><a href="CIME/tests/test_unit_case.html">CIME.tests.test_unit_case</a></li>
 <li><a href="CIME/tests/test_unit_case_fake.html">CIME.tests.test_unit_case_fake</a></li>
+<li><a href="CIME/tests/test_unit_case_run.html">CIME.tests.test_unit_case_run</a></li>
 <li><a href="CIME/tests/test_unit_case_setup.html">CIME.tests.test_unit_case_setup</a></li>
 <li><a href="CIME/tests/test_unit_compare_test_results.html">CIME.tests.test_unit_compare_test_results</a></li>
 <li><a href="CIME/tests/test_unit_compare_two.html">CIME.tests.test_unit_compare_two</a></li>
 <li><a href="CIME/tests/test_unit_config.html">CIME.tests.test_unit_config</a></li>
+<li><a href="CIME/tests/test_unit_configure.html">CIME.tests.test_unit_configure</a></li>
 <li><a href="CIME/tests/test_unit_cs_status.html">CIME.tests.test_unit_cs_status</a></li>
 <li><a href="CIME/tests/test_unit_custom_assertions_test_status.html">CIME.tests.test_unit_custom_assertions_test_status</a></li>
 <li><a href="CIME/tests/test_unit_doctest.html">CIME.tests.test_unit_doctest</a></li>
 <li><a href="CIME/tests/test_unit_expected_fails_file.html">CIME.tests.test_unit_expected_fails_file</a></li>
+<li><a href="CIME/tests/test_unit_fake_case.html">CIME.tests.test_unit_fake_case</a></li>
 <li><a href="CIME/tests/test_unit_grids.html">CIME.tests.test_unit_grids</a></li>
 <li><a href="CIME/tests/test_unit_hist_utils.html">CIME.tests.test_unit_hist_utils</a></li>
+<li><a href="CIME/tests/test_unit_locked_files.html">CIME.tests.test_unit_locked_files</a></li>
 <li><a href="CIME/tests/test_unit_nmlgen.html">CIME.tests.test_unit_nmlgen</a></li>
 <li><a href="CIME/tests/test_unit_paramgen.html">CIME.tests.test_unit_paramgen</a></li>
 <li><a href="CIME/tests/test_unit_system_tests.html">CIME.tests.test_unit_system_tests</a></li>
+<li><a href="CIME/tests/test_unit_system_tests_mvk.html">CIME.tests.test_unit_system_tests_mvk</a></li>
 <li><a href="CIME/tests/test_unit_test_status.html">CIME.tests.test_unit_test_status</a></li>
 <li><a href="CIME/tests/test_unit_two_link_to_case2_output.html">CIME.tests.test_unit_two_link_to_case2_output</a></li>
 <li><a href="CIME/tests/test_unit_user_mod_support.html">CIME.tests.test_unit_user_mod_support</a></li>
@@ -252,6 +258,7 @@
 <li><a href="CIME/tests/test_unit_xml_archive_base.html">CIME.tests.test_unit_xml_archive_base</a></li>
 <li><a href="CIME/tests/test_unit_xml_env_batch.html">CIME.tests.test_unit_xml_env_batch</a></li>
 <li><a href="CIME/tests/test_unit_xml_env_mach_specific.html">CIME.tests.test_unit_xml_env_mach_specific</a></li>
+<li><a href="CIME/tests/test_unit_xml_grids.html">CIME.tests.test_unit_xml_grids</a></li>
 <li><a href="CIME/tests/test_unit_xml_machines.html">CIME.tests.test_unit_xml_machines</a></li>
 <li><a href="CIME/tests/test_unit_xml_namelist_definition.html">CIME.tests.test_unit_xml_namelist_definition</a></li>
 <li><a href="CIME/tests/test_unit_xml_tests.html">CIME.tests.test_unit_xml_tests</a></li>
@@ -287,7 +294,44 @@
       </div>
     </section>
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
+    let baseUriRegex = /(.*\/cime)\/.*/g;
+    let parsedUri = baseUriRegex.exec(document.baseURI);
+
+    if (parsedUri != null && parsedUri.length == 2) {
+      let baseUri = parsedUri[1];
+
+      $.get(`${baseUri}/versions/versions.json`, function(data) {
+        let versionElement = $("#versions");
+
+        Object.keys(data).forEach(function(key) {
+          let value = data[key];
+
+          let item = `<dd><a href="${baseUri}/versions/${key}/html/">${value}</a></dd>`
+
+          versionElement.append(item);
+        });
+      });
+    }
+  </script>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Read the Docs</span>
+      v: master
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      
+      <dl id="versions">
+        <dt>Versions</dt>
+      </dl>
+      
+      
+    </div>
+  </div>
+<script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });

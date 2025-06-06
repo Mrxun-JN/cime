@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../">
 <head>
@@ -5,21 +7,19 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CIME.scripts package &mdash; CIME master documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
-      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=d05bb7fd" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=30d551ce"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../_static/pop_ver.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=30d551ce"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -38,9 +38,6 @@
           <a href="../index.html" class="icon icon-home">
             CIME
           </a>
-              <div class="version">
-                master
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -51,8 +48,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../what_cime/index.html">What is CIME?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../users_guide/index.html">Case Control System Part 1: Basic Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../users_guide/index.html#case-control-system-part-2-configuration-porting-testing-and-use-cases">Case Control System Part 2: Configuration, Porting, Testing and Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/index.html">Using the Case Control System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/index.html#configuring-the-case-control-system">Configuring the Case Control System</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../build_cpl/index.html">Building a Coupled Model with CIME</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../misc_tools/index.html">Miscellaneous Tools</a></li>
 </ul>
@@ -92,6 +89,7 @@
 <li class="toctree-l3"><a class="reference internal" href="CIME.html#module-CIME.expected_fails">CIME.expected_fails module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CIME.html#module-CIME.get_tests">CIME.get_tests module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CIME.html#module-CIME.get_timing">CIME.get_timing module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CIME.html#module-CIME.gitinterface">CIME.gitinterface module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CIME.html#module-CIME.hist_utils">CIME.hist_utils module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CIME.html#module-CIME.jenkins_generic_job">CIME.jenkins_generic_job module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CIME.html#module-CIME.locked_files">CIME.locked_files module</a></li>
@@ -99,6 +97,7 @@
 <li class="toctree-l3"><a class="reference internal" href="CIME.html#module-CIME.nmlgen">CIME.nmlgen module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CIME.html#module-CIME.provenance">CIME.provenance module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CIME.html#module-CIME.simple_compare">CIME.simple_compare module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CIME.html#module-CIME.status">CIME.status module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CIME.html#module-CIME.test_scheduler">CIME.test_scheduler module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CIME.html#module-CIME.test_status">CIME.test_status module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CIME.html#module-CIME.test_utils">CIME.test_utils module</a></li>
@@ -211,7 +210,7 @@
 <a class="reference external" href="https://github.com/ESMCI/cime">https://github.com/ESMCI/cime</a></p>
 <dl class="py function">
 <dt class="sig sig-object py" id="CIME.scripts.create_test.create_test">
-<span class="sig-prename descclassname"><span class="pre">CIME.scripts.create_test.</span></span><span class="sig-name descname"><span class="pre">create_test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compiler</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">machine_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_run</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_setup</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_batch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baseline_root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baseline_cmp_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baseline_gen_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namelists_only</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallel_jobs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">walltime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_submit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proc_pool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_existing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_timing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_baseline_overwrite</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_procs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_threads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpilib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pesfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_count</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mail_user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mail_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_throughput</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_memory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_namelists</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_memleak</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_pnl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_local</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_exe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workflow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chksum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_rebuild</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/scripts/create_test.html#create_test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.scripts.create_test.create_test" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">CIME.scripts.create_test.</span></span><span class="sig-name descname"><span class="pre">create_test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compiler</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">machine_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_run</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_setup</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_batch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baseline_root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baseline_cmp_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baseline_gen_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namelists_only</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallel_jobs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">walltime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_submit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proc_pool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_existing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_timing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_baseline_overwrite</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_tests_with_existing_baselines</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_procs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_threads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpilib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pesfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_count</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mail_user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mail_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_throughput</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_memory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_namelists</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_diffs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_memleak</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_pnl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_local</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_exe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workflow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chksum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_rebuild</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">driver</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/scripts/create_test.html#create_test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.scripts.create_test.create_test" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
@@ -236,90 +235,63 @@
 machines. Typically run with one of the arguments –compsets, –settings,
 –grids or –machines; if you specify more than one of these arguments,
 information will be listed for each.</p>
-<dl class="py class">
-<dt class="sig sig-object py" id="CIME.scripts.query_config.ArgumentParser">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CIME.scripts.query_config.</span></span><span class="sig-name descname"><span class="pre">ArgumentParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usage=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epilog=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parents=[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">formatter_class=&lt;class</span> <span class="pre">'argparse.HelpFormatter'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix_chars='-'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fromfile_prefix_chars=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">argument_default=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conflict_handler='error'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_help=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_abbrev=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exit_on_error=True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/scripts/query_config.html#ArgumentParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.scripts.query_config.ArgumentParser" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
-<p>we override the error message from ArgumentParser to have a more helpful
-message in the case of missing arguments</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="CIME.scripts.query_config.ArgumentParser.error">
-<span class="sig-name descname"><span class="pre">error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/scripts/query_config.html#ArgumentParser.error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.scripts.query_config.ArgumentParser.error" title="Link to this definition"></a></dt>
-<dd><p>Prints a usage message incorporating the message to stderr and
-exits.</p>
-<p>If you override this in a subclass, it should not return – it
-should either exit or raise an exception.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="CIME.scripts.query_config.Machines">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CIME.scripts.query_config.</span></span><span class="sig-name descname"><span class="pre">Machines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">infile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">machine</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_machines_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/scripts/query_config.html#Machines"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.scripts.query_config.Machines" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="CIME.XML.html#CIME.XML.machines.Machines" title="CIME.XML.machines.Machines"><code class="xref py py-class docutils literal notranslate"><span class="pre">Machines</span></code></a></p>
-<p>we overide print_values from Machines to add current in machine description</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="CIME.scripts.query_config.Machines.print_values">
-<span class="sig-name descname"><span class="pre">print_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">machine_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/scripts/query_config.html#Machines.print_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.scripts.query_config.Machines.print_values" title="Link to this definition"></a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="CIME.scripts.query_config.get_component_classes">
+<span class="sig-prename descclassname"><span class="pre">CIME.scripts.query_config.</span></span><span class="sig-name descname"><span class="pre">get_component_classes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/scripts/query_config.html#get_component_classes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.scripts.query_config.get_component_classes" title="Link to this definition"></a></dt>
 <dd></dd></dl>
-
-</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="CIME.scripts.query_config.get_components">
 <span class="sig-prename descclassname"><span class="pre">CIME.scripts.query_config.</span></span><span class="sig-name descname"><span class="pre">get_components</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/scripts/query_config.html#get_components"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.scripts.query_config.get_components" title="Link to this definition"></a></dt>
-<dd><p>Determine the valid component classes (e.g. atm) for the driver/cpl
-These are then stored in comps_array</p>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="CIME.scripts.query_config.get_compsets">
-<span class="sig-prename descclassname"><span class="pre">CIME.scripts.query_config.</span></span><span class="sig-name descname"><span class="pre">get_compsets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/scripts/query_config.html#get_compsets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.scripts.query_config.get_compsets" title="Link to this definition"></a></dt>
-<dd><p>Determine valid component values by checking the value attributes for COMPSETS_SPEC_FILE</p>
-</dd></dl>
+<dt class="sig sig-object py" id="CIME.scripts.query_config.get_compset_active_components">
+<span class="sig-prename descclassname"><span class="pre">CIME.scripts.query_config.</span></span><span class="sig-name descname"><span class="pre">get_compset_active_components</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/scripts/query_config.html#get_compset_active_components"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.scripts.query_config.get_compset_active_components" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="CIME.scripts.query_config.parse_command_line">
-<span class="sig-prename descclassname"><span class="pre">CIME.scripts.query_config.</span></span><span class="sig-name descname"><span class="pre">parse_command_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/scripts/query_config.html#parse_command_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.scripts.query_config.parse_command_line" title="Link to this definition"></a></dt>
-<dd><p>parse command line arguments</p>
-</dd></dl>
+<span class="sig-prename descclassname"><span class="pre">CIME.scripts.query_config.</span></span><span class="sig-name descname"><span class="pre">parse_command_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">description</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/scripts/query_config.html#parse_command_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.scripts.query_config.parse_command_line" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="CIME.scripts.query_config.print_compset">
-<span class="sig-prename descclassname"><span class="pre">CIME.scripts.query_config.</span></span><span class="sig-name descname"><span class="pre">print_compset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xml</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/scripts/query_config.html#print_compset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.scripts.query_config.print_compset" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">CIME.scripts.query_config.</span></span><span class="sig-name descname"><span class="pre">print_compset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xml</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/scripts/query_config.html#print_compset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.scripts.query_config.print_compset" title="Link to this definition"></a></dt>
 <dd><p>print compsets associated with the component name, but if all_components is true only
 print the details if the associated component is available</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="CIME.scripts.query_config.query_all_components">
-<span class="sig-prename descclassname"><span class="pre">CIME.scripts.query_config.</span></span><span class="sig-name descname"><span class="pre">query_all_components</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xml</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/scripts/query_config.html#query_all_components"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.scripts.query_config.query_all_components" title="Link to this definition"></a></dt>
-<dd><p>query all components</p>
+<dt class="sig sig-object py" id="CIME.scripts.query_config.print_machine_values">
+<span class="sig-prename descclassname"><span class="pre">CIME.scripts.query_config.</span></span><span class="sig-name descname"><span class="pre">print_machine_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">machine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compiler</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">machine_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/scripts/query_config.html#print_machine_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.scripts.query_config.print_machine_values" title="Link to this definition"></a></dt>
+<dd><p>Prints machine values</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>machine (CIME.XML.machines.Machine): Machine object.
+machine_name (str, optional): Which machine to print values for, can be “all”, “current”, or specific name. Defaults to “all”.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="CIME.scripts.query_config.query_component">
-<span class="sig-prename descclassname"><span class="pre">CIME.scripts.query_config.</span></span><span class="sig-name descname"><span class="pre">query_component</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xml</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/scripts/query_config.html#query_component"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.scripts.query_config.query_component" title="Link to this definition"></a></dt>
-<dd><p>query a component by name</p>
-</dd></dl>
+<dt class="sig sig-object py" id="CIME.scripts.query_config.query_component_settings">
+<span class="sig-prename descclassname"><span class="pre">CIME.scripts.query_config.</span></span><span class="sig-name descname"><span class="pre">query_component_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">components</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">files</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/scripts/query_config.html#query_component_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.scripts.query_config.query_component_settings" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="CIME.scripts.query_config.query_compsets">
-<span class="sig-prename descclassname"><span class="pre">CIME.scripts.query_config.</span></span><span class="sig-name descname"><span class="pre">query_compsets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xml</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/scripts/query_config.html#query_compsets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.scripts.query_config.query_compsets" title="Link to this definition"></a></dt>
-<dd><p>query compset definition give a compset name</p>
-</dd></dl>
+<span class="sig-prename descclassname"><span class="pre">CIME.scripts.query_config.</span></span><span class="sig-name descname"><span class="pre">query_compsets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compsets</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/scripts/query_config.html#query_compsets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.scripts.query_config.query_compsets" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="CIME.scripts.query_config.query_grids">
-<span class="sig-prename descclassname"><span class="pre">CIME.scripts.query_config.</span></span><span class="sig-name descname"><span class="pre">query_grids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long_output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xml</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/scripts/query_config.html#query_grids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.scripts.query_config.query_grids" title="Link to this definition"></a></dt>
-<dd><p>query all grids.</p>
-</dd></dl>
+<span class="sig-prename descclassname"><span class="pre">CIME.scripts.query_config.</span></span><span class="sig-name descname"><span class="pre">query_grids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xml</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/scripts/query_config.html#query_grids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.scripts.query_config.query_grids" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="CIME.scripts.query_config.query_machines">
-<span class="sig-prename descclassname"><span class="pre">CIME.scripts.query_config.</span></span><span class="sig-name descname"><span class="pre">query_machines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">machine_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xml</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/scripts/query_config.html#query_machines"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.scripts.query_config.query_machines" title="Link to this definition"></a></dt>
-<dd><p>query machines. Defaule: all</p>
-</dd></dl>
+<span class="sig-prename descclassname"><span class="pre">CIME.scripts.query_config.</span></span><span class="sig-name descname"><span class="pre">query_machines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">machines</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xml</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compiler</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/scripts/query_config.html#query_machines"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.scripts.query_config.query_machines" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 </section>
 <section id="module-CIME.scripts.query_testlists">
@@ -425,7 +397,44 @@ print the details if the associated component is available</p>
       </div>
     </section>
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
+    let baseUriRegex = /(.*\/cime)\/.*/g;
+    let parsedUri = baseUriRegex.exec(document.baseURI);
+
+    if (parsedUri != null && parsedUri.length == 2) {
+      let baseUri = parsedUri[1];
+
+      $.get(`${baseUri}/versions/versions.json`, function(data) {
+        let versionElement = $("#versions");
+
+        Object.keys(data).forEach(function(key) {
+          let value = data[key];
+
+          let item = `<dd><a href="${baseUri}/versions/${key}/html/">${value}</a></dd>`
+
+          versionElement.append(item);
+        });
+      });
+    }
+  </script>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Read the Docs</span>
+      v: master
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      
+      <dl id="versions">
+        <dt>Versions</dt>
+      </dl>
+      
+      
+    </div>
+  </div>
+<script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });

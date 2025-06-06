@@ -1,24 +1,24 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CIME.tests.test_sys_jenkins_generic_job &mdash; CIME master documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=d05bb7fd" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=30d551ce"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../../../_static/pop_ver.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=30d551ce"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -35,9 +35,6 @@
           <a href="../../../index.html" class="icon icon-home">
             CIME
           </a>
-              <div class="version">
-                master
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -48,8 +45,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../what_cime/index.html">What is CIME?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/index.html">Case Control System Part 1: Basic Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/index.html#case-control-system-part-2-configuration-porting-testing-and-use-cases">Case Control System Part 2: Configuration, Porting, Testing and Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/index.html">Using the Case Control System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/index.html#configuring-the-case-control-system">Configuring the Case Control System</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../build_cpl/index.html">Building a Coupled Model with CIME</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../misc_tools/index.html">Miscellaneous Tools</a></li>
 </ul>
@@ -88,24 +85,24 @@
   <h1>Source code for CIME.tests.test_sys_jenkins_generic_job</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">signal</span>
-<span class="kn">import</span> <span class="nn">stat</span>
-<span class="kn">import</span> <span class="nn">threading</span>
-<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">signal</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">stat</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 
-<span class="kn">from</span> <span class="nn">CIME</span> <span class="kn">import</span> <span class="n">get_tests</span>
-<span class="kn">from</span> <span class="nn">CIME</span> <span class="kn">import</span> <span class="n">utils</span>
-<span class="kn">from</span> <span class="nn">CIME.tests</span> <span class="kn">import</span> <span class="n">base</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_tests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">base</span>
 
 
 <div class="viewcode-block" id="TestJenkinsGenericJob">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_sys_jenkins_generic_job.TestJenkinsGenericJob">[docs]</a>
-<span class="k">class</span> <span class="nc">TestJenkinsGenericJob</span><span class="p">(</span><span class="n">base</span><span class="o">.</span><span class="n">BaseTestCase</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestJenkinsGenericJob</span><span class="p">(</span><span class="n">base</span><span class="o">.</span><span class="n">BaseTestCase</span><span class="p">):</span>
 <div class="viewcode-block" id="TestJenkinsGenericJob.setUp">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_sys_jenkins_generic_job.TestJenkinsGenericJob.setUp">[docs]</a>
-    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setUp</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">test_mode</span> <span class="o">==</span> <span class="s2">&quot;cesm&quot;</span><span class="p">:</span>
@@ -124,7 +121,7 @@
 
 <div class="viewcode-block" id="TestJenkinsGenericJob.tearDown">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_sys_jenkins_generic_job.TestJenkinsGenericJob.tearDown">[docs]</a>
-    <span class="k">def</span> <span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">tearDown</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="s2">&quot;TESTRUNDIFF_ALTERNATE&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
@@ -133,7 +130,7 @@
 
 <div class="viewcode-block" id="TestJenkinsGenericJob.simple_test">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_sys_jenkins_generic_job.TestJenkinsGenericJob.simple_test">[docs]</a>
-    <span class="k">def</span> <span class="nf">simple_test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expect_works</span><span class="p">,</span> <span class="n">extra_args</span><span class="p">,</span> <span class="n">build_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">simple_test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expect_works</span><span class="p">,</span> <span class="n">extra_args</span><span class="p">,</span> <span class="n">build_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">NO_BATCH</span><span class="p">:</span>
             <span class="n">extra_args</span> <span class="o">+=</span> <span class="s2">&quot; --no-batch&quot;</span>
 
@@ -155,7 +152,7 @@
 
 <div class="viewcode-block" id="TestJenkinsGenericJob.threaded_test">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_sys_jenkins_generic_job.TestJenkinsGenericJob.threaded_test">[docs]</a>
-    <span class="k">def</span> <span class="nf">threaded_test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expect_works</span><span class="p">,</span> <span class="n">extra_args</span><span class="p">,</span> <span class="n">build_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">threaded_test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expect_works</span><span class="p">,</span> <span class="n">extra_args</span><span class="p">,</span> <span class="n">build_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">simple_test</span><span class="p">(</span><span class="n">expect_works</span><span class="p">,</span> <span class="n">extra_args</span><span class="p">,</span> <span class="n">build_name</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -164,7 +161,7 @@
 
 <div class="viewcode-block" id="TestJenkinsGenericJob.assert_num_leftovers">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_sys_jenkins_generic_job.TestJenkinsGenericJob.assert_num_leftovers">[docs]</a>
-    <span class="k">def</span> <span class="nf">assert_num_leftovers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suite</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">assert_num_leftovers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suite</span><span class="p">):</span>
         <span class="n">num_tests_in_suite</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">get_tests</span><span class="o">.</span><span class="n">get_test_suite</span><span class="p">(</span><span class="n">suite</span><span class="p">))</span>
 
         <span class="n">case_glob</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/*</span><span class="si">%s</span><span class="s2">*/&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_jenkins_root</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_baseline_name</span><span class="o">.</span><span class="n">capitalize</span><span class="p">())</span>
@@ -186,7 +183,7 @@
 
 <div class="viewcode-block" id="TestJenkinsGenericJob.test_jenkins_generic_job">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_sys_jenkins_generic_job.TestJenkinsGenericJob.test_jenkins_generic_job">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_jenkins_generic_job</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_jenkins_generic_job</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Generate fresh baselines so that this test is not impacted by</span>
         <span class="c1"># unresolved diffs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">simple_test</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;-t cime_test_only_pass -g -b </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_baseline_name</span><span class="p">)</span>
@@ -206,7 +203,7 @@
 
 <div class="viewcode-block" id="TestJenkinsGenericJob.test_jenkins_generic_job_save_timing">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_sys_jenkins_generic_job.TestJenkinsGenericJob.test_jenkins_generic_job_save_timing">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_jenkins_generic_job_save_timing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_jenkins_generic_job_save_timing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">simple_test</span><span class="p">(</span>
             <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;-t cime_test_timing --save-timing -b </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_baseline_name</span>
         <span class="p">)</span>
@@ -224,7 +221,7 @@
 
 <div class="viewcode-block" id="TestJenkinsGenericJob.test_jenkins_generic_job_kill">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_sys_jenkins_generic_job.TestJenkinsGenericJob.test_jenkins_generic_job_kill">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_jenkins_generic_job_kill</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_jenkins_generic_job_kill</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">build_name</span> <span class="o">=</span> <span class="s2">&quot;jenkins_generic_job_kill_</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_timestamp</span><span class="p">()</span>
         <span class="n">run_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
             <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">threaded_test</span><span class="p">,</span>
@@ -251,7 +248,7 @@
 
 <div class="viewcode-block" id="TestJenkinsGenericJob.test_jenkins_generic_job_realistic_dash">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_sys_jenkins_generic_job.TestJenkinsGenericJob.test_jenkins_generic_job_realistic_dash">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_jenkins_generic_job_realistic_dash</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_jenkins_generic_job_realistic_dash</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># The actual quality of the cdash results for this test can only</span>
         <span class="c1"># be inspected manually</span>
 
@@ -322,7 +319,44 @@
       </div>
     </section>
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
+    let baseUriRegex = /(.*\/cime)\/.*/g;
+    let parsedUri = baseUriRegex.exec(document.baseURI);
+
+    if (parsedUri != null && parsedUri.length == 2) {
+      let baseUri = parsedUri[1];
+
+      $.get(`${baseUri}/versions/versions.json`, function(data) {
+        let versionElement = $("#versions");
+
+        Object.keys(data).forEach(function(key) {
+          let value = data[key];
+
+          let item = `<dd><a href="${baseUri}/versions/${key}/html/">${value}</a></dd>`
+
+          versionElement.append(item);
+        });
+      });
+    }
+  </script>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Read the Docs</span>
+      v: master
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      
+      <dl id="versions">
+        <dt>Versions</dt>
+      </dl>
+      
+      
+    </div>
+  </div>
+<script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });

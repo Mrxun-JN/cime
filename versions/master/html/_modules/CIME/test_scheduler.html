@@ -1,24 +1,24 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CIME.test_scheduler &mdash; CIME master documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
-      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=d05bb7fd" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=30d551ce"></script>
-        <script src="../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../../_static/pop_ver.js"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=30d551ce"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -35,9 +35,6 @@
           <a href="../../index.html" class="icon icon-home">
             CIME
           </a>
-              <div class="version">
-                master
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -48,8 +45,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../what_cime/index.html">What is CIME?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../users_guide/index.html">Case Control System Part 1: Basic Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../users_guide/index.html#case-control-system-part-2-configuration-porting-testing-and-use-cases">Case Control System Part 2: Configuration, Porting, Testing and Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/index.html">Using the Case Control System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/index.html#configuring-the-case-control-system">Configuring the Case Control System</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../build_cpl/index.html">Building a Coupled Model with CIME</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../misc_tools/index.html">Miscellaneous Tools</a></li>
 </ul>
@@ -96,15 +93,14 @@
 <span class="sd">they can be run outside the context of TestScheduler.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">traceback</span><span class="o">,</span> <span class="nn">stat</span><span class="o">,</span> <span class="nn">threading</span><span class="o">,</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">glob</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span><span class="o">,</span><span class="w"> </span><span class="nn">stat</span><span class="o">,</span><span class="w"> </span><span class="nn">threading</span><span class="o">,</span><span class="w"> </span><span class="nn">time</span><span class="o">,</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
 
-<span class="kn">from</span> <span class="nn">CIME.XML.standard_module_setup</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">CIME.get_tests</span> <span class="kn">import</span> <span class="n">get_recommended_test_time</span><span class="p">,</span> <span class="n">get_build_groups</span><span class="p">,</span> <span class="n">is_perf_test</span>
-<span class="kn">from</span> <span class="nn">CIME.utils</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">append_status</span><span class="p">,</span>
-    <span class="n">append_testlog</span><span class="p">,</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.XML.standard_module_setup</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.get_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_recommended_test_time</span><span class="p">,</span> <span class="n">get_build_groups</span><span class="p">,</span> <span class="n">is_perf_test</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.status</span><span class="w"> </span><span class="kn">import</span> <span class="n">append_status</span><span class="p">,</span> <span class="n">append_testlog</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">TESTS_FAILED_ERR_CODE</span><span class="p">,</span>
     <span class="n">parse_test_name</span><span class="p">,</span>
     <span class="n">get_full_test_name</span><span class="p">,</span>
@@ -118,23 +114,25 @@
     <span class="n">get_timestamp</span><span class="p">,</span>
     <span class="n">get_cime_default_driver</span><span class="p">,</span>
     <span class="n">clear_folder</span><span class="p">,</span>
+    <span class="n">CIMEError</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">CIME.config</span> <span class="kn">import</span> <span class="n">Config</span>
-<span class="kn">from</span> <span class="nn">CIME.test_status</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">CIME.XML.machines</span> <span class="kn">import</span> <span class="n">Machines</span>
-<span class="kn">from</span> <span class="nn">CIME.XML.generic_xml</span> <span class="kn">import</span> <span class="n">GenericXML</span>
-<span class="kn">from</span> <span class="nn">CIME.XML.env_test</span> <span class="kn">import</span> <span class="n">EnvTest</span>
-<span class="kn">from</span> <span class="nn">CIME.XML.env_mach_pes</span> <span class="kn">import</span> <span class="n">EnvMachPes</span>
-<span class="kn">from</span> <span class="nn">CIME.XML.files</span> <span class="kn">import</span> <span class="n">Files</span>
-<span class="kn">from</span> <span class="nn">CIME.XML.component</span> <span class="kn">import</span> <span class="n">Component</span>
-<span class="kn">from</span> <span class="nn">CIME.XML.tests</span> <span class="kn">import</span> <span class="n">Tests</span>
-<span class="kn">from</span> <span class="nn">CIME.case</span> <span class="kn">import</span> <span class="n">Case</span>
-<span class="kn">from</span> <span class="nn">CIME.wait_for_tests</span> <span class="kn">import</span> <span class="n">wait_for_tests</span>
-<span class="kn">from</span> <span class="nn">CIME.provenance</span> <span class="kn">import</span> <span class="n">get_recommended_test_time_based_on_past</span>
-<span class="kn">from</span> <span class="nn">CIME.locked_files</span> <span class="kn">import</span> <span class="n">lock_file</span>
-<span class="kn">from</span> <span class="nn">CIME.cs_status_creator</span> <span class="kn">import</span> <span class="n">create_cs_status</span>
-<span class="kn">from</span> <span class="nn">CIME.hist_utils</span> <span class="kn">import</span> <span class="n">generate_teststatus</span>
-<span class="kn">from</span> <span class="nn">CIME.build</span> <span class="kn">import</span> <span class="n">post_build</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.test_status</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.XML.machines</span><span class="w"> </span><span class="kn">import</span> <span class="n">Machines</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.XML.generic_xml</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenericXML</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.XML.env_test</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnvTest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.XML.env_mach_pes</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnvMachPes</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.XML.files</span><span class="w"> </span><span class="kn">import</span> <span class="n">Files</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.XML.component</span><span class="w"> </span><span class="kn">import</span> <span class="n">Component</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.XML.tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.case</span><span class="w"> </span><span class="kn">import</span> <span class="n">Case</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.wait_for_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">wait_for_tests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.provenance</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_recommended_test_time_based_on_past</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.locked_files</span><span class="w"> </span><span class="kn">import</span> <span class="n">lock_file</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.cs_status_creator</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_cs_status</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.hist_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_teststatus</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.build</span><span class="w"> </span><span class="kn">import</span> <span class="n">post_build</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.SystemTests.test_mods</span><span class="w"> </span><span class="kn">import</span> <span class="n">find_test_mods</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -151,7 +149,7 @@
 <span class="p">]</span>  <span class="c1"># Order matters</span>
 
 <span class="c1">###############################################################################</span>
-<span class="k">def</span> <span class="nf">_translate_test_names_for_new_pecount</span><span class="p">(</span><span class="n">test_names</span><span class="p">,</span> <span class="n">force_procs</span><span class="p">,</span> <span class="n">force_threads</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_translate_test_names_for_new_pecount</span><span class="p">(</span><span class="n">test_names</span><span class="p">,</span> <span class="n">force_procs</span><span class="p">,</span> <span class="n">force_threads</span><span class="p">):</span>
     <span class="c1">###############################################################################</span>
     <span class="n">new_test_names</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">caseopts</span> <span class="o">=</span> <span class="p">[]</span>
@@ -218,7 +216,7 @@
 
 <span class="n">_TIME_CACHE</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="c1">###############################################################################</span>
-<span class="k">def</span> <span class="nf">_get_time_est</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">baseline_root</span><span class="p">,</span> <span class="n">as_int</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_cache</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_time_est</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">baseline_root</span><span class="p">,</span> <span class="n">as_int</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_cache</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="c1">###############################################################################</span>
     <span class="k">if</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">_TIME_CACHE</span> <span class="ow">and</span> <span class="n">use_cache</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">_TIME_CACHE</span><span class="p">[</span><span class="n">test</span><span class="p">]</span>
@@ -243,7 +241,7 @@
 
 
 <span class="c1">###############################################################################</span>
-<span class="k">def</span> <span class="nf">_order_tests_by_runtime</span><span class="p">(</span><span class="n">tests</span><span class="p">,</span> <span class="n">baseline_root</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_order_tests_by_runtime</span><span class="p">(</span><span class="n">tests</span><span class="p">,</span> <span class="n">baseline_root</span><span class="p">):</span>
     <span class="c1">###############################################################################</span>
     <span class="n">tests</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span>
         <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">_get_time_est</span><span class="p">(</span>
@@ -256,11 +254,11 @@
 <span class="c1">###############################################################################</span>
 <div class="viewcode-block" id="TestScheduler">
 <a class="viewcode-back" href="../../CIME_api/CIME.html#CIME.test_scheduler.TestScheduler">[docs]</a>
-<span class="k">class</span> <span class="nc">TestScheduler</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestScheduler</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="c1">###############################################################################</span>
 
     <span class="c1">###########################################################################</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">test_names</span><span class="p">,</span>
         <span class="n">test_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -285,6 +283,7 @@
         <span class="n">save_timing</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">queue</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">allow_baseline_overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">skip_tests_with_existing_baselines</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">output_root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">force_procs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">force_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -300,11 +299,12 @@
         <span class="n">workflow</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">chksum</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">force_rebuild</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">driver</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="c1">###########################################################################</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cime_root</span> <span class="o">=</span> <span class="n">get_cime_root</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cime_model</span> <span class="o">=</span> <span class="n">get_model</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_cime_driver</span> <span class="o">=</span> <span class="n">get_cime_default_driver</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cime_driver</span> <span class="o">=</span> <span class="n">driver</span> <span class="k">if</span> <span class="n">driver</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">get_cime_default_driver</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_save_timing</span> <span class="o">=</span> <span class="n">save_timing</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span> <span class="o">=</span> <span class="n">queue</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_test_data</span> <span class="o">=</span> <span class="p">(</span>
@@ -315,6 +315,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_input_dir</span> <span class="o">=</span> <span class="n">input_dir</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_pesfile</span> <span class="o">=</span> <span class="n">pesfile</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_allow_baseline_overwrite</span> <span class="o">=</span> <span class="n">allow_baseline_overwrite</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_skip_tests_with_existing_baselines</span> <span class="o">=</span> <span class="n">skip_tests_with_existing_baselines</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_single_exe</span> <span class="o">=</span> <span class="n">single_exe</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_single_exe</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_allow_pnl</span> <span class="o">=</span> <span class="kc">True</span>
@@ -436,6 +437,8 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">_baseline_root</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_baseline_gen_name</span>
                 <span class="p">)</span>
                 <span class="n">existing_baselines</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">if</span> <span class="n">skip_tests_with_existing_baselines</span><span class="p">:</span>
+                    <span class="n">tests_to_skip</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="k">for</span> <span class="n">test_name</span> <span class="ow">in</span> <span class="n">test_names</span><span class="p">:</span>
                     <span class="n">test_baseline</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">full_baseline_dir</span><span class="p">,</span> <span class="n">test_name</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">test_baseline</span><span class="p">):</span>
@@ -445,11 +448,21 @@
                                 <span class="n">clear_folder</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_baseline</span><span class="p">,</span> <span class="s2">&quot;CaseDocs&quot;</span><span class="p">))</span>
                             <span class="k">else</span><span class="p">:</span>
                                 <span class="n">clear_folder</span><span class="p">(</span><span class="n">test_baseline</span><span class="p">)</span>
+                        <span class="k">elif</span> <span class="n">skip_tests_with_existing_baselines</span><span class="p">:</span>
+                            <span class="n">tests_to_skip</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">test_name</span><span class="p">)</span>
                 <span class="n">expect</span><span class="p">(</span>
-                    <span class="n">allow_baseline_overwrite</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">existing_baselines</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span>
+                    <span class="n">allow_baseline_overwrite</span>
+                    <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">existing_baselines</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+                    <span class="ow">or</span> <span class="n">skip_tests_with_existing_baselines</span><span class="p">,</span>
                     <span class="s2">&quot;Baseline directories already exists </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span>
-                    <span class="s2">&quot;Use -o to avoid this error&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">existing_baselines</span><span class="p">),</span>
+                    <span class="s2">&quot;Use -o or --skip-tests-with-existing-baselines to avoid this error&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">existing_baselines</span>
+                    <span class="p">),</span>
                 <span class="p">)</span>
+                <span class="k">if</span> <span class="n">skip_tests_with_existing_baselines</span><span class="p">:</span>
+                    <span class="n">test_names</span> <span class="o">=</span> <span class="p">[</span>
+                        <span class="n">test</span> <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">test_names</span> <span class="k">if</span> <span class="n">test</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tests_to_skip</span>
+                    <span class="p">]</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">sort_tests</span><span class="p">:</span>
             <span class="n">_order_tests_by_runtime</span><span class="p">(</span><span class="n">test_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_baseline_root</span><span class="p">)</span>
@@ -565,13 +578,13 @@
     <span class="c1">###########################################################################</span>
 <div class="viewcode-block" id="TestScheduler.get_testnames">
 <a class="viewcode-back" href="../../CIME_api/CIME.html#CIME.test_scheduler.TestScheduler.get_testnames">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_testnames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_testnames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1">###########################################################################</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tests</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
 
 
     <span class="c1">###########################################################################</span>
-    <span class="k">def</span> <span class="nf">_log_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_log_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
         <span class="c1">###########################################################################</span>
         <span class="n">test_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_test_dir</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">test_dir</span><span class="p">):</span>
@@ -581,7 +594,7 @@
         <span class="n">append_testlog</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">caseroot</span><span class="o">=</span><span class="n">test_dir</span><span class="p">)</span>
 
     <span class="c1">###########################################################################</span>
-    <span class="k">def</span> <span class="nf">_get_case_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_case_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
         <span class="c1">###########################################################################</span>
         <span class="n">baseline_action_code</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_baseline_gen_name</span><span class="p">:</span>
@@ -594,24 +607,24 @@
             <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_test_id</span><span class="p">)</span>
 
     <span class="c1">###########################################################################</span>
-    <span class="k">def</span> <span class="nf">_get_test_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_test_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
         <span class="c1">###########################################################################</span>
         <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_test_root</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_case_id</span><span class="p">(</span><span class="n">test</span><span class="p">))</span>
 
     <span class="c1">###########################################################################</span>
-    <span class="k">def</span> <span class="nf">_get_test_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_test_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
         <span class="c1">###########################################################################</span>
         <span class="c1"># Must be atomic</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tests</span><span class="p">[</span><span class="n">test</span><span class="p">]</span>
 
     <span class="c1">###########################################################################</span>
-    <span class="k">def</span> <span class="nf">_is_broken</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_is_broken</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
         <span class="c1">###########################################################################</span>
         <span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_test_status</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">status</span> <span class="o">!=</span> <span class="n">TEST_PASS_STATUS</span> <span class="ow">and</span> <span class="n">status</span> <span class="o">!=</span> <span class="n">TEST_PEND_STATUS</span>
 
     <span class="c1">###########################################################################</span>
-    <span class="k">def</span> <span class="nf">_work_remains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_work_remains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
         <span class="c1">###########################################################################</span>
         <span class="n">test_phase</span><span class="p">,</span> <span class="n">test_status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_test_data</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span>
@@ -619,7 +632,7 @@
         <span class="p">)</span> <span class="ow">and</span> <span class="n">test_phase</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phases</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
     <span class="c1">###########################################################################</span>
-    <span class="k">def</span> <span class="nf">_get_test_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_test_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1">###########################################################################</span>
         <span class="n">curr_phase</span><span class="p">,</span> <span class="n">curr_status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_test_data</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">phase</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">phase</span> <span class="o">==</span> <span class="n">curr_phase</span><span class="p">:</span>
@@ -635,12 +648,12 @@
             <span class="k">return</span> <span class="n">TEST_PASS_STATUS</span>
 
     <span class="c1">###########################################################################</span>
-    <span class="k">def</span> <span class="nf">_get_test_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_test_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
         <span class="c1">###########################################################################</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_test_data</span><span class="p">(</span><span class="n">test</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
     <span class="c1">###########################################################################</span>
-    <span class="k">def</span> <span class="nf">_update_test_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">status</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_test_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">status</span><span class="p">):</span>
         <span class="c1">###########################################################################</span>
         <span class="n">phase_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phases</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
         <span class="n">old_phase</span><span class="p">,</span> <span class="n">old_status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_test_data</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
@@ -670,7 +683,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_tests</span><span class="p">[</span><span class="n">test</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">phase</span><span class="p">,</span> <span class="n">status</span><span class="p">)</span>
 
     <span class="c1">###########################################################################</span>
-    <span class="k">def</span> <span class="nf">_shell_cmd_for_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">from_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_shell_cmd_for_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">from_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1">###########################################################################</span>
         <span class="n">env</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">env</span><span class="p">[</span><span class="s2">&quot;PYTHONPATH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">get_cime_root</span><span class="p">()</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">get_tools_path</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -704,7 +717,7 @@
                 <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="n">errput</span>
 
     <span class="c1">###########################################################################</span>
-    <span class="k">def</span> <span class="nf">_create_newcase_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_newcase_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
         <span class="c1">###########################################################################</span>
         <span class="n">test_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_test_dir</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
 
@@ -743,6 +756,7 @@
         <span class="n">mpilib</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">ninst</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">ncpl</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">driver</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cime_driver</span>
         <span class="k">if</span> <span class="n">case_opts</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">case_opt</span> <span class="ow">in</span> <span class="n">case_opts</span><span class="p">:</span>  <span class="c1"># pylint: disable=not-an-iterable</span>
                 <span class="k">if</span> <span class="n">case_opt</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;M&quot;</span><span class="p">):</span>
@@ -762,62 +776,35 @@
                 <span class="k">elif</span> <span class="n">case_opt</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;P&quot;</span><span class="p">):</span>
                     <span class="n">pesize</span> <span class="o">=</span> <span class="n">case_opt</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
                     <span class="n">create_newcase_cmd</span> <span class="o">+=</span> <span class="s2">&quot; --pecount </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pesize</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">case_opt</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;G&quot;</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="s2">&quot;-&quot;</span> <span class="ow">in</span> <span class="n">case_opt</span><span class="p">:</span>
-                        <span class="n">ngpus_per_node</span><span class="p">,</span> <span class="n">gpu_type</span><span class="p">,</span> <span class="n">gpu_offload</span> <span class="o">=</span> <span class="n">case_opt</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;GPU test argument format is ngpus_per_node-gpu_type-gpu_offload&quot;</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_log_output</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">error</span>
-                    <span class="n">create_newcase_cmd</span> <span class="o">+=</span> <span class="p">(</span>
-                        <span class="s2">&quot; --ngpus-per-node </span><span class="si">{}</span><span class="s2"> --gpu-type </span><span class="si">{}</span><span class="s2"> --gpu-offload </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                            <span class="n">ngpus_per_node</span><span class="p">,</span> <span class="n">gpu_type</span><span class="p">,</span> <span class="n">gpu_offload</span>
-                        <span class="p">)</span>
-                    <span class="p">)</span>
                 <span class="k">elif</span> <span class="n">case_opt</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;V&quot;</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_cime_driver</span> <span class="o">=</span> <span class="n">case_opt</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-                    <span class="n">create_newcase_cmd</span> <span class="o">+=</span> <span class="s2">&quot; --driver </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cime_driver</span><span class="p">)</span>
+                    <span class="n">driver</span> <span class="o">=</span> <span class="n">case_opt</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+        <span class="n">create_newcase_cmd</span> <span class="o">+=</span> <span class="s2">&quot; --driver </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">driver</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="p">(</span>
             <span class="s2">&quot;--ninst&quot;</span> <span class="ow">in</span> <span class="n">create_newcase_cmd</span>
             <span class="ow">and</span> <span class="ow">not</span> <span class="s2">&quot;--multi-driver&quot;</span> <span class="ow">in</span> <span class="n">create_newcase_cmd</span>
         <span class="p">):</span>
             <span class="k">if</span> <span class="s2">&quot;--driver nuopc&quot;</span> <span class="ow">in</span> <span class="n">create_newcase_cmd</span> <span class="ow">or</span> <span class="p">(</span>
-                <span class="s2">&quot;--driver&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">create_newcase_cmd</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cime_driver</span> <span class="o">==</span> <span class="s2">&quot;nuopc&quot;</span>
+                <span class="s2">&quot;--driver&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">create_newcase_cmd</span> <span class="ow">and</span> <span class="n">driver</span> <span class="o">==</span> <span class="s2">&quot;nuopc&quot;</span>
             <span class="p">):</span>
                 <span class="n">expect</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;_N option not supported by nuopc driver, use _C instead&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">test_mods</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">create_newcase_cmd</span> <span class="o">+=</span> <span class="s2">&quot; --user-mods-dir &quot;</span>
 
-            <span class="k">for</span> <span class="n">one_test_mod</span> <span class="ow">in</span> <span class="n">test_mods</span><span class="p">:</span>  <span class="c1"># pylint: disable=not-an-iterable</span>
-                <span class="k">if</span> <span class="n">one_test_mod</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-                    <span class="p">(</span><span class="n">component</span><span class="p">,</span> <span class="n">modspath</span><span class="p">)</span> <span class="o">=</span> <span class="n">one_test_mod</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;Missing testmod component. Testmods are specified as &#39;$</span><span class="si">{component}</span><span class="s2">-$</span><span class="si">{testmod}</span><span class="s2">&#39;&quot;</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_log_output</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">error</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">test_mods_paths</span> <span class="o">=</span> <span class="n">find_test_mods</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cime_driver</span><span class="p">,</span> <span class="n">test_mods</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">CIMEError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">error</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
 
-                <span class="n">files</span> <span class="o">=</span> <span class="n">Files</span><span class="p">(</span><span class="n">comp_interface</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_cime_driver</span><span class="p">)</span>
-                <span class="n">testmods_dir</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span>
-                    <span class="s2">&quot;TESTS_MODS_DIR&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span> <span class="n">component</span><span class="p">}</span>
-                <span class="p">)</span>
-                <span class="n">test_mod_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">testmods_dir</span><span class="p">,</span> <span class="n">component</span><span class="p">,</span> <span class="n">modspath</span><span class="p">)</span>
-                <span class="c1"># if no testmod is found check if a usermod of the same name exists and</span>
-                <span class="c1"># use it if it does.</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">test_mod_file</span><span class="p">):</span>
-                    <span class="n">usermods_dir</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span>
-                        <span class="s2">&quot;USER_MODS_DIR&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span> <span class="n">component</span><span class="p">}</span>
-                    <span class="p">)</span>
-                    <span class="n">test_mod_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">usermods_dir</span><span class="p">,</span> <span class="n">modspath</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">test_mod_file</span><span class="p">):</span>
-                        <span class="n">error</span> <span class="o">=</span> <span class="s2">&quot;Missing testmod file &#39;</span><span class="si">{}</span><span class="s2">&#39;, checked </span><span class="si">{}</span><span class="s2"> and </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                            <span class="n">modspath</span><span class="p">,</span> <span class="n">testmods_dir</span><span class="p">,</span> <span class="n">usermods_dir</span>
-                        <span class="p">)</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_log_output</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">error</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_log_output</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
 
-                <span class="n">create_newcase_cmd</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">test_mod_file</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">error</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">test_mods_paths</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_mods_paths</span><span class="p">)</span>
+
+                <span class="n">create_newcase_cmd</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">test_mods_paths</span><span class="si">}</span><span class="s2">&quot;</span>
 
         <span class="c1"># create_test mpilib option overrides default but not explicitly set case_opt mpilib</span>
         <span class="k">if</span> <span class="n">mpilib</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mpilib</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -869,7 +856,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shell_cmd_for_phase</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">create_newcase_cmd</span><span class="p">,</span> <span class="n">CREATE_NEWCASE_PHASE</span><span class="p">)</span>
 
     <span class="c1">###########################################################################</span>
-    <span class="k">def</span> <span class="nf">_xml_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_xml_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
         <span class="c1">###########################################################################</span>
         <span class="n">test_case</span><span class="p">,</span> <span class="n">case_opts</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">compiler</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">parse_test_name</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
 
@@ -877,9 +864,16 @@
         <span class="n">test_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_test_dir</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
         <span class="n">envtest</span> <span class="o">=</span> <span class="n">EnvTest</span><span class="p">(</span><span class="n">test_dir</span><span class="p">)</span>
 
+        <span class="c1"># Find driver. It may be different for the current test if V testopt is used</span>
+        <span class="n">driver</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cime_driver</span>
+        <span class="k">if</span> <span class="n">case_opts</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">case_opt</span> <span class="ow">in</span> <span class="n">case_opts</span><span class="p">:</span>  <span class="c1"># pylint: disable=not-an-iterable</span>
+                <span class="k">if</span> <span class="n">case_opt</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;V&quot;</span><span class="p">):</span>
+                    <span class="n">driver</span> <span class="o">=</span> <span class="n">case_opt</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
         <span class="c1"># Determine list of component classes that this coupler/driver knows how</span>
         <span class="c1"># to deal with. This list follows the same order as compset longnames follow.</span>
-        <span class="n">files</span> <span class="o">=</span> <span class="n">Files</span><span class="p">(</span><span class="n">comp_interface</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_cime_driver</span><span class="p">)</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="n">Files</span><span class="p">(</span><span class="n">comp_interface</span><span class="o">=</span><span class="n">driver</span><span class="p">)</span>
         <span class="n">ufs_driver</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;UFS_DRIVER&quot;</span><span class="p">)</span>
         <span class="n">attribute</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">ufs_driver</span><span class="p">:</span>
@@ -887,13 +881,11 @@
 
         <span class="n">drv_config_file</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;CONFIG_CPL_FILE&quot;</span><span class="p">,</span> <span class="n">attribute</span><span class="o">=</span><span class="n">attribute</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cime_driver</span> <span class="o">==</span> <span class="s2">&quot;nuopc&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">drv_config_file</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">driver</span> <span class="o">==</span> <span class="s2">&quot;nuopc&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">drv_config_file</span><span class="p">):</span>
             <span class="n">drv_config_file</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;CONFIG_CPL_FILE&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span> <span class="s2">&quot;cpl&quot;</span><span class="p">})</span>
         <span class="n">expect</span><span class="p">(</span>
             <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">drv_config_file</span><span class="p">),</span>
-            <span class="s2">&quot;File </span><span class="si">{}</span><span class="s2"> not found, cime driver </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">drv_config_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cime_driver</span>
-            <span class="p">),</span>
+            <span class="s2">&quot;File </span><span class="si">{}</span><span class="s2"> not found, cime driver </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">drv_config_file</span><span class="p">,</span> <span class="n">driver</span><span class="p">),</span>
         <span class="p">)</span>
 
         <span class="n">drv_comp</span> <span class="o">=</span> <span class="n">Component</span><span class="p">(</span><span class="n">drv_config_file</span><span class="p">,</span> <span class="s2">&quot;CPL&quot;</span><span class="p">)</span>
@@ -1018,7 +1010,9 @@
                 <span class="k">elif</span> <span class="n">opt</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">):</span>
                     <span class="c1"># A option is for testing in ASYNC IO mode, only available with nuopc driver and pio2</span>
                     <span class="n">envtest</span><span class="o">.</span><span class="n">set_test_parameter</span><span class="p">(</span><span class="s2">&quot;PIO_ASYNC_INTERFACE&quot;</span><span class="p">,</span> <span class="s2">&quot;TRUE&quot;</span><span class="p">)</span>
-                    <span class="n">envtest</span><span class="o">.</span><span class="n">set_test_parameter</span><span class="p">(</span><span class="s2">&quot;CIME_DRIVER&quot;</span><span class="p">,</span> <span class="s2">&quot;nuopc&quot;</span><span class="p">)</span>
+                    <span class="n">expect</span><span class="p">(</span>
+                        <span class="n">driver</span> <span class="o">==</span> <span class="s2">&quot;nuopc&quot;</span><span class="p">,</span> <span class="s2">&quot;ASYNC IO mode only works with nuopc driver&quot;</span>
+                    <span class="p">)</span>
                     <span class="n">envtest</span><span class="o">.</span><span class="n">set_test_parameter</span><span class="p">(</span><span class="s2">&quot;PIO_VERSION&quot;</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">)</span>
                     <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">&quot;A([0-9]+)x?([0-9])*&quot;</span><span class="p">,</span> <span class="n">opt</span><span class="p">)</span>
                     <span class="n">envtest</span><span class="o">.</span><span class="n">set_test_parameter</span><span class="p">(</span><span class="s2">&quot;PIO_NUMTASKS_CPL&quot;</span><span class="p">,</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
@@ -1087,7 +1081,7 @@
         <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;&quot;</span>
 
     <span class="c1">###########################################################################</span>
-    <span class="k">def</span> <span class="nf">_setup_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setup_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
         <span class="c1">###########################################################################</span>
         <span class="n">test_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_test_dir</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
         <span class="n">rv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shell_cmd_for_phase</span><span class="p">(</span>
@@ -1104,10 +1098,14 @@
                 <span class="n">from_dir</span><span class="o">=</span><span class="n">test_dir</span><span class="p">,</span>
                 <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span>
             <span class="p">)</span>
-            <span class="n">expect</span><span class="p">(</span>
-                <span class="n">cmdstat</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">TESTS_FAILED_ERR_CODE</span><span class="p">],</span>
-                <span class="s2">&quot;Fatal error in case.cmpgen_namelists: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output</span><span class="p">),</span>
-            <span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">expect</span><span class="p">(</span>
+                    <span class="n">cmdstat</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">TESTS_FAILED_ERR_CODE</span><span class="p">],</span>
+                    <span class="s2">&quot;Fatal error in case.cmpgen_namelists: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output</span><span class="p">),</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_update_test_status_file</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">SETUP_PHASE</span><span class="p">,</span> <span class="n">TEST_FAIL_STATUS</span><span class="p">)</span>
+                <span class="k">raise</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_single_exe</span><span class="p">:</span>
             <span class="k">with</span> <span class="n">Case</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_test_dir</span><span class="p">(</span><span class="n">test</span><span class="p">),</span> <span class="n">read_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">case</span><span class="p">:</span>
@@ -1123,7 +1121,7 @@
         <span class="k">return</span> <span class="n">rv</span>
 
     <span class="c1">###########################################################################</span>
-    <span class="k">def</span> <span class="nf">_sharedlib_build_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_sharedlib_build_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
         <span class="c1">###########################################################################</span>
         <span class="n">is_first_test</span><span class="p">,</span> <span class="n">first_test</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_build_group</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_first_test</span><span class="p">:</span>
@@ -1146,7 +1144,7 @@
         <span class="p">)</span>
 
     <span class="c1">###########################################################################</span>
-    <span class="k">def</span> <span class="nf">_get_build_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_build_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
         <span class="c1">###########################################################################</span>
         <span class="k">for</span> <span class="n">build_group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_groups</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">build_group</span><span class="p">:</span>
@@ -1155,7 +1153,7 @@
         <span class="n">expect</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;No build group for test &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">test</span><span class="p">))</span>
 
     <span class="c1">###########################################################################</span>
-    <span class="k">def</span> <span class="nf">_model_build_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_model_build_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
         <span class="c1">###########################################################################</span>
         <span class="n">is_first_test</span><span class="p">,</span> <span class="n">first_test</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_build_group</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
 
@@ -1182,7 +1180,7 @@
         <span class="p">)</span>
 
     <span class="c1">###########################################################################</span>
-    <span class="k">def</span> <span class="nf">_run_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_run_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
         <span class="c1">###########################################################################</span>
         <span class="n">test_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_test_dir</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
 
@@ -1212,7 +1210,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shell_cmd_for_phase</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">RUN_PHASE</span><span class="p">,</span> <span class="n">from_dir</span><span class="o">=</span><span class="n">test_dir</span><span class="p">)</span>
 
     <span class="c1">###########################################################################</span>
-    <span class="k">def</span> <span class="nf">_run_catch_exceptions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">run</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_run_catch_exceptions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">run</span><span class="p">):</span>
         <span class="c1">###########################################################################</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">run</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
@@ -1226,8 +1224,13 @@
             <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">errput</span>
 
     <span class="c1">###########################################################################</span>
-    <span class="k">def</span> <span class="nf">_get_procs_needed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">threads_in_flight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">no_batch</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_procs_needed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">threads_in_flight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">no_batch</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="c1">###########################################################################</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the number of processors/cores needed to run phase of test.</span>
+
+<span class="sd">        Returns None if the phase of this test is currently ineligible to run.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># For build pools, we must wait for the first case to complete XML, SHAREDLIB,</span>
         <span class="c1"># and MODEL_BUILD phases before the other cases can do those phases</span>
         <span class="n">is_first_test</span><span class="p">,</span> <span class="n">first_test</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_build_group</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
@@ -1240,7 +1243,7 @@
             <span class="p">]</span>
             <span class="k">if</span> <span class="n">phase</span> <span class="ow">in</span> <span class="n">build_group_dep_phases</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_test_status</span><span class="p">(</span><span class="n">first_test</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="n">phase</span><span class="p">)</span> <span class="o">==</span> <span class="n">TEST_PEND_STATUS</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_proc_pool</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># None indicates job is ineligible to run</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">return</span> <span class="mi">1</span>
 
@@ -1256,7 +1259,7 @@
                 <span class="c1"># them all in parallel</span>
                 <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">running_phase</span> <span class="ow">in</span> <span class="n">threads_in_flight</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
                     <span class="k">if</span> <span class="n">running_phase</span> <span class="o">==</span> <span class="n">SHAREDLIB_BUILD_PHASE</span><span class="p">:</span>
-                        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_proc_pool</span> <span class="o">+</span> <span class="mi">1</span>
+                        <span class="k">return</span> <span class="kc">None</span>
 
             <span class="k">return</span> <span class="mi">1</span>
         <span class="k">elif</span> <span class="n">phase</span> <span class="o">==</span> <span class="n">MODEL_BUILD_PHASE</span><span class="p">:</span>
@@ -1266,7 +1269,7 @@
             <span class="k">return</span> <span class="mi">1</span>
 
     <span class="c1">###########################################################################</span>
-    <span class="k">def</span> <span class="nf">_wait_for_something_to_finish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threads_in_flight</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_wait_for_something_to_finish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threads_in_flight</span><span class="p">):</span>
         <span class="c1">###########################################################################</span>
         <span class="n">expect</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">threads_in_flight</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parallel_jobs</span><span class="p">,</span> <span class="s2">&quot;Oversubscribed?&quot;</span><span class="p">)</span>
         <span class="n">finished_tests</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1283,7 +1286,7 @@
             <span class="k">del</span> <span class="n">threads_in_flight</span><span class="p">[</span><span class="n">finished_test</span><span class="p">]</span>
 
     <span class="c1">###########################################################################</span>
-    <span class="k">def</span> <span class="nf">_update_test_status_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">test_phase</span><span class="p">,</span> <span class="n">status</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_test_status_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">test_phase</span><span class="p">,</span> <span class="n">status</span><span class="p">):</span>
         <span class="c1">###########################################################################</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        In general, test_scheduler should not be responsible for updating</span>
@@ -1294,7 +1297,7 @@
             <span class="n">ts</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="n">test_phase</span><span class="p">,</span> <span class="n">status</span><span class="p">)</span>
 
     <span class="c1">###########################################################################</span>
-    <span class="k">def</span> <span class="nf">_consumer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">test_phase</span><span class="p">,</span> <span class="n">phase_method</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_consumer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">test_phase</span><span class="p">,</span> <span class="n">phase_method</span><span class="p">):</span>
         <span class="c1">###########################################################################</span>
         <span class="n">before_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="n">success</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_catch_exceptions</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">test_phase</span><span class="p">,</span> <span class="n">phase_method</span><span class="p">)</span>
@@ -1367,7 +1370,74 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_consumer</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">RUN_PHASE</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_phase</span><span class="p">)</span>
 
     <span class="c1">###########################################################################</span>
-    <span class="k">def</span> <span class="nf">_producer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_producer_indv_test_launch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">threads_in_flight</span><span class="p">):</span>
+        <span class="c1">###########################################################################</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Launch the next phase of test if possible. Return True if launched</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">test_phase</span><span class="p">,</span> <span class="n">test_status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_test_data</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
+        <span class="n">expect</span><span class="p">(</span><span class="n">test_status</span> <span class="o">!=</span> <span class="n">TEST_PEND_STATUS</span><span class="p">,</span> <span class="n">test</span><span class="p">)</span>
+        <span class="n">next_phase</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phases</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_phases</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">test_phase</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">procs_needed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_procs_needed</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">next_phase</span><span class="p">,</span> <span class="n">threads_in_flight</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">procs_needed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># This test cannot run now so skip</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">elif</span> <span class="n">procs_needed</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_proc_pool</span><span class="p">:</span>
+            <span class="c1"># This test is asking for more than we can ever provide</span>
+            <span class="c1"># This should only ever happen for RUN_PHASE</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Test </span><span class="si">{</span><span class="n">test</span><span class="si">}</span><span class="s2"> phase </span><span class="si">{</span><span class="n">next_phase</span><span class="si">}</span><span class="s2"> requested more (</span><span class="si">{</span><span class="n">procs_needed</span><span class="si">}</span><span class="s2">) than entire pool (self._proc_pool)&quot;</span>
+            <span class="n">expect</span><span class="p">(</span><span class="n">next_phase</span> <span class="o">==</span> <span class="n">RUN_PHASE</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+
+            <span class="c1"># CIME phase won&#39;t be run, so we need to update TEST_STATUS ourselves</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_test_status_file</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">SUBMIT_PHASE</span><span class="p">,</span> <span class="n">TEST_PASS_STATUS</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_test_status_file</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">RUN_PHASE</span><span class="p">,</span> <span class="n">TEST_FAIL_STATUS</span><span class="p">)</span>
+
+            <span class="c1"># Update our internal state that this test failed</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_test_status</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">next_phase</span><span class="p">,</span> <span class="n">TEST_PEND_STATUS</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_test_status</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">next_phase</span><span class="p">,</span> <span class="n">TEST_FAIL_STATUS</span><span class="p">)</span>
+
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log_output</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+
+            <span class="c1"># We did run the phase in some sense in that we instantly failed it</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">elif</span> <span class="n">procs_needed</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_procs_avail</span><span class="p">:</span>
+            <span class="c1"># We can run this test!</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_procs_avail</span> <span class="o">-=</span> <span class="n">procs_needed</span>
+
+            <span class="c1"># Necessary to print this way when multiple threads printing</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Starting </span><span class="si">{</span><span class="n">next_phase</span><span class="si">}</span><span class="s2"> for test </span><span class="si">{</span><span class="n">test</span><span class="si">}</span><span class="s2"> with </span><span class="si">{</span><span class="n">procs_needed</span><span class="si">}</span><span class="s2"> procs&quot;</span>
+            <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_test_status</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">next_phase</span><span class="p">,</span> <span class="n">TEST_PEND_STATUS</span><span class="p">)</span>
+            <span class="n">phase_method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="n">next_phase</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">_phase&quot;</span><span class="p">)</span>
+            <span class="n">new_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
+                <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_consumer</span><span class="p">,</span>
+                <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">next_phase</span><span class="p">,</span> <span class="n">phase_method</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="n">threads_in_flight</span><span class="p">[</span><span class="n">test</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">new_thread</span><span class="p">,</span> <span class="n">procs_needed</span><span class="p">,</span> <span class="n">next_phase</span><span class="p">)</span>
+            <span class="n">new_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;  Current workload:&quot;</span><span class="p">)</span>
+            <span class="n">total_procs</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">the_test</span><span class="p">,</span> <span class="n">the_data</span> <span class="ow">in</span> <span class="n">threads_in_flight</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    </span><span class="si">{</span><span class="n">the_test</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">the_data</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">the_data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">total_procs</span> <span class="o">+=</span> <span class="n">the_data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Total procs in use: </span><span class="si">{</span><span class="n">total_procs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># There aren&#39;t enough free procs to run this phase, so skip</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_producer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1">###########################################################################</span>
         <span class="n">threads_in_flight</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># test-name -&gt; (thread, procs, phase)</span>
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
@@ -1383,81 +1453,14 @@
                     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">threads_in_flight</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parallel_jobs</span><span class="p">:</span>
                         <span class="k">break</span>
 
+                    <span class="c1"># Check if this test is already running a phase. If so, we can&#39;t</span>
+                    <span class="c1"># launch a new phase now.</span>
                     <span class="k">if</span> <span class="n">test</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">threads_in_flight</span><span class="p">:</span>
-                        <span class="n">test_phase</span><span class="p">,</span> <span class="n">test_status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_test_data</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
-                        <span class="n">expect</span><span class="p">(</span><span class="n">test_status</span> <span class="o">!=</span> <span class="n">TEST_PEND_STATUS</span><span class="p">,</span> <span class="n">test</span><span class="p">)</span>
-                        <span class="n">next_phase</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phases</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_phases</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">test_phase</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
-                        <span class="n">procs_needed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_procs_needed</span><span class="p">(</span>
-                            <span class="n">test</span><span class="p">,</span> <span class="n">next_phase</span><span class="p">,</span> <span class="n">threads_in_flight</span>
+                        <span class="n">launched</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_producer_indv_test_launch</span><span class="p">(</span>
+                            <span class="n">test</span><span class="p">,</span> <span class="n">threads_in_flight</span>
                         <span class="p">)</span>
-
-                        <span class="k">if</span> <span class="n">procs_needed</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_procs_avail</span><span class="p">:</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">_procs_avail</span> <span class="o">-=</span> <span class="n">procs_needed</span>
-
-                            <span class="c1"># Necessary to print this way when multiple threads printing</span>
-                            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                                <span class="s2">&quot;Starting </span><span class="si">{}</span><span class="s2"> for test </span><span class="si">{}</span><span class="s2"> with </span><span class="si">{:d}</span><span class="s2"> procs&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                    <span class="n">next_phase</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">procs_needed</span>
-                                <span class="p">)</span>
-                            <span class="p">)</span>
-
-                            <span class="bp">self</span><span class="o">.</span><span class="n">_update_test_status</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">next_phase</span><span class="p">,</span> <span class="n">TEST_PEND_STATUS</span><span class="p">)</span>
-                            <span class="n">new_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
-                                <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_consumer</span><span class="p">,</span>
-                                <span class="n">args</span><span class="o">=</span><span class="p">(</span>
-                                    <span class="n">test</span><span class="p">,</span>
-                                    <span class="n">next_phase</span><span class="p">,</span>
-                                    <span class="nb">getattr</span><span class="p">(</span>
-                                        <span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_</span><span class="si">{}</span><span class="s2">_phase&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">next_phase</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
-                                    <span class="p">),</span>
-                                <span class="p">),</span>
-                            <span class="p">)</span>
-                            <span class="n">threads_in_flight</span><span class="p">[</span><span class="n">test</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-                                <span class="n">new_thread</span><span class="p">,</span>
-                                <span class="n">procs_needed</span><span class="p">,</span>
-                                <span class="n">next_phase</span><span class="p">,</span>
-                            <span class="p">)</span>
-                            <span class="n">new_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="n">launched</span><span class="p">:</span>
                             <span class="n">num_threads_launched_this_iteration</span> <span class="o">+=</span> <span class="mi">1</span>
-
-                            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;  Current workload:&quot;</span><span class="p">)</span>
-                            <span class="n">total_procs</span> <span class="o">=</span> <span class="mi">0</span>
-                            <span class="k">for</span> <span class="n">the_test</span><span class="p">,</span> <span class="n">the_data</span> <span class="ow">in</span> <span class="n">threads_in_flight</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                                    <span class="s2">&quot;    </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2"> -&gt; </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                        <span class="n">the_test</span><span class="p">,</span> <span class="n">the_data</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">the_data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                                    <span class="p">)</span>
-                                <span class="p">)</span>
-                                <span class="n">total_procs</span> <span class="o">+=</span> <span class="n">the_data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-
-                            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                                <span class="s2">&quot;    Total procs in use: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">total_procs</span><span class="p">)</span>
-                            <span class="p">)</span>
-                        <span class="k">else</span><span class="p">:</span>
-                            <span class="k">if</span> <span class="ow">not</span> <span class="n">threads_in_flight</span><span class="p">:</span>
-                                <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Phase &#39;</span><span class="si">{}</span><span class="s2">&#39; for test &#39;</span><span class="si">{}</span><span class="s2">&#39; required more processors, </span><span class="si">{:d}</span><span class="s2">, than this machine can provide, </span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                    <span class="n">next_phase</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">procs_needed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_procs_avail</span>
-                                <span class="p">)</span>
-                                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-                                <span class="bp">self</span><span class="o">.</span><span class="n">_update_test_status</span><span class="p">(</span>
-                                    <span class="n">test</span><span class="p">,</span> <span class="n">next_phase</span><span class="p">,</span> <span class="n">TEST_PEND_STATUS</span>
-                                <span class="p">)</span>
-                                <span class="bp">self</span><span class="o">.</span><span class="n">_update_test_status</span><span class="p">(</span>
-                                    <span class="n">test</span><span class="p">,</span> <span class="n">next_phase</span><span class="p">,</span> <span class="n">TEST_FAIL_STATUS</span>
-                                <span class="p">)</span>
-                                <span class="bp">self</span><span class="o">.</span><span class="n">_log_output</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
-                                <span class="k">if</span> <span class="n">next_phase</span> <span class="o">==</span> <span class="n">RUN_PHASE</span><span class="p">:</span>
-                                    <span class="bp">self</span><span class="o">.</span><span class="n">_update_test_status_file</span><span class="p">(</span>
-                                        <span class="n">test</span><span class="p">,</span> <span class="n">SUBMIT_PHASE</span><span class="p">,</span> <span class="n">TEST_PASS_STATUS</span>
-                                    <span class="p">)</span>
-                                    <span class="bp">self</span><span class="o">.</span><span class="n">_update_test_status_file</span><span class="p">(</span>
-                                        <span class="n">test</span><span class="p">,</span> <span class="n">next_phase</span><span class="p">,</span> <span class="n">TEST_FAIL_STATUS</span>
-                                    <span class="p">)</span>
-                                <span class="k">else</span><span class="p">:</span>
-                                    <span class="bp">self</span><span class="o">.</span><span class="n">_update_test_status_file</span><span class="p">(</span>
-                                        <span class="n">test</span><span class="p">,</span> <span class="n">next_phase</span><span class="p">,</span> <span class="n">TEST_FAIL_STATUS</span>
-                                    <span class="p">)</span>
-                                <span class="n">num_threads_launched_this_iteration</span> <span class="o">+=</span> <span class="mi">1</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">work_to_do</span><span class="p">:</span>
                 <span class="k">break</span>
@@ -1470,7 +1473,7 @@
             <span class="n">unfinished_thread</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
 
     <span class="c1">###########################################################################</span>
-    <span class="k">def</span> <span class="nf">_setup_cs_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setup_cs_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1">###########################################################################</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">template_path</span> <span class="o">=</span> <span class="n">get_template_path</span><span class="p">()</span>
@@ -1518,12 +1521,13 @@
     <span class="c1">###########################################################################</span>
 <div class="viewcode-block" id="TestScheduler.run_tests">
 <a class="viewcode-back" href="../../CIME_api/CIME.html#CIME.test_scheduler.TestScheduler.run_tests">[docs]</a>
-    <span class="k">def</span> <span class="nf">run_tests</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_tests</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">wait</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">check_throughput</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">check_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">ignore_namelists</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">ignore_diffs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">ignore_memleak</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="c1">###########################################################################</span>
@@ -1579,6 +1583,7 @@
             <span class="n">check_throughput</span><span class="o">=</span><span class="n">check_throughput</span><span class="p">,</span>
             <span class="n">check_memory</span><span class="o">=</span><span class="n">check_memory</span><span class="p">,</span>
             <span class="n">ignore_namelists</span><span class="o">=</span><span class="n">ignore_namelists</span><span class="p">,</span>
+            <span class="n">ignore_diffs</span><span class="o">=</span><span class="n">ignore_diffs</span><span class="p">,</span>
             <span class="n">ignore_memleak</span><span class="o">=</span><span class="n">ignore_memleak</span><span class="p">,</span>
             <span class="n">no_run</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_no_run</span><span class="p">,</span>
             <span class="n">expect_test_complete</span><span class="o">=</span><span class="n">expect_test_complete</span><span class="p">,</span>
@@ -1620,7 +1625,44 @@
       </div>
     </section>
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
+    let baseUriRegex = /(.*\/cime)\/.*/g;
+    let parsedUri = baseUriRegex.exec(document.baseURI);
+
+    if (parsedUri != null && parsedUri.length == 2) {
+      let baseUri = parsedUri[1];
+
+      $.get(`${baseUri}/versions/versions.json`, function(data) {
+        let versionElement = $("#versions");
+
+        Object.keys(data).forEach(function(key) {
+          let value = data[key];
+
+          let item = `<dd><a href="${baseUri}/versions/${key}/html/">${value}</a></dd>`
+
+          versionElement.append(item);
+        });
+      });
+    }
+  </script>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Read the Docs</span>
+      v: master
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      
+      <dl id="versions">
+        <dt>Versions</dt>
+      </dl>
+      
+      
+    </div>
+  </div>
+<script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });

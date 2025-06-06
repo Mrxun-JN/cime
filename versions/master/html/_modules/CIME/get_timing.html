@@ -1,24 +1,24 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CIME.get_timing &mdash; CIME master documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
-      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=d05bb7fd" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=30d551ce"></script>
-        <script src="../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../../_static/pop_ver.js"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=30d551ce"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -35,9 +35,6 @@
           <a href="../../index.html" class="icon icon-home">
             CIME
           </a>
-              <div class="version">
-                master
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -48,8 +45,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../what_cime/index.html">What is CIME?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../users_guide/index.html">Case Control System Part 1: Basic Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../users_guide/index.html#case-control-system-part-2-configuration-porting-testing-and-use-cases">Case Control System Part 2: Configuration, Porting, Testing and Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/index.html">Using the Case Control System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/index.html#configuring-the-case-control-system">Configuring the Case Control System</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../build_cpl/index.html">Building a Coupled Model with CIME</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../misc_tools/index.html">Miscellaneous Tools</a></li>
 </ul>
@@ -93,24 +90,25 @@
 <span class="sd">information from a run.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">CIME.XML.standard_module_setup</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">CIME.utils</span> <span class="kn">import</span> <span class="n">safe_copy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.XML.standard_module_setup</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">safe_copy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.status</span><span class="w"> </span><span class="kn">import</span> <span class="n">append_case_status</span>
 
-<span class="kn">import</span> <span class="nn">datetime</span><span class="o">,</span> <span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span><span class="o">,</span><span class="w"> </span><span class="nn">re</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">_GetTimingInfo</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">_GetTimingInfo</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tmin</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tmax</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">adays</span> <span class="o">=</span> <span class="mi">0</span>
 
 
-<span class="k">class</span> <span class="nc">_TimingParser</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">case</span><span class="p">,</span> <span class="n">lid</span><span class="o">=</span><span class="s2">&quot;999999-999999&quot;</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">_TimingParser</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">case</span><span class="p">,</span> <span class="n">lid</span><span class="o">=</span><span class="s2">&quot;999999-999999&quot;</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">case</span> <span class="o">=</span> <span class="n">case</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">caseroot</span> <span class="o">=</span> <span class="n">case</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;CASEROOT&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lid</span> <span class="o">=</span> <span class="n">lid</span>
@@ -123,10 +121,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">nprocs</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 
-    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">prttime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">div</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">coff</span><span class="o">=-</span><span class="mi">999</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prttime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">div</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">coff</span><span class="o">=-</span><span class="mi">999</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">offset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="s2">&quot;CPL&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">offset</span>
         <span class="k">if</span> <span class="n">div</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -166,7 +164,7 @@
                     <span class="p">)</span>
                 <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">gettime2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">heading_padded</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">gettime2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">heading_padded</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_driver</span> <span class="o">==</span> <span class="s2">&quot;mct&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_driver</span> <span class="o">==</span> <span class="s2">&quot;moab&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gettime2_mct</span><span class="p">(</span><span class="n">heading_padded</span><span class="p">)</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_driver</span> <span class="o">==</span> <span class="s2">&quot;nuopc&quot;</span><span class="p">:</span>
@@ -174,7 +172,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_get_esmf_profile_version</span><span class="p">()</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gettime2_nuopc</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_gettime2_mct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">heading_padded</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_gettime2_mct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">heading_padded</span><span class="p">):</span>
         <span class="n">nprocs</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">ncount</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -193,7 +191,7 @@
                     <span class="k">return</span> <span class="p">(</span><span class="n">nprocs</span><span class="p">,</span> <span class="n">ncount</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_gettime2_nuopc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_gettime2_nuopc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nprocs</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ncount</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -212,7 +210,7 @@
 
         <span class="k">return</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">gettime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">heading_padded</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">gettime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">heading_padded</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_driver</span> <span class="o">==</span> <span class="s2">&quot;mct&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_driver</span> <span class="o">==</span> <span class="s2">&quot;moab&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gettime_mct</span><span class="p">(</span><span class="n">heading_padded</span><span class="p">)</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_driver</span> <span class="o">==</span> <span class="s2">&quot;nuopc&quot;</span><span class="p">:</span>
@@ -220,7 +218,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_get_esmf_profile_version</span><span class="p">()</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gettime_nuopc</span><span class="p">(</span><span class="n">heading_padded</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_gettime_mct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">heading_padded</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_gettime_mct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">heading_padded</span><span class="p">):</span>
         <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">heading</span> <span class="o">=</span> <span class="s1">&#39;&quot;&#39;</span> <span class="o">+</span> <span class="n">heading_padded</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span>
         <span class="n">minval</span> <span class="o">=</span> <span class="mi">0</span>
@@ -239,7 +237,7 @@
                 <span class="k">return</span> <span class="p">(</span><span class="n">minval</span><span class="p">,</span> <span class="n">maxval</span><span class="p">,</span> <span class="n">found</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_get_esmf_profile_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_esmf_profile_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Prior to ESMF8_3_0_beta_snapshot_04 the PEs column was not in ESMF_Profile.summary</span>
 <span class="sd">        this routine looks for that in the header field to determine if this file was produced</span>
@@ -253,7 +251,7 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="k">def</span> <span class="nf">_gettime_nuopc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">heading</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="s2">&quot;0001&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_gettime_nuopc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">heading</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="s2">&quot;0001&quot;</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">instance</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
             <span class="n">instance</span> <span class="o">=</span> <span class="s2">&quot;0001&quot;</span>
         <span class="n">minval</span> <span class="o">=</span> <span class="mi">0</span>
@@ -293,7 +291,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_get_nuopc_phase</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">phase</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_nuopc_phase</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">phase</span><span class="p">):</span>
         <span class="k">if</span> <span class="s2">&quot;[ensemble] Init 1&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
             <span class="n">phase</span> <span class="o">=</span> <span class="s2">&quot;init&quot;</span>
         <span class="k">elif</span> <span class="s2">&quot;[ESM&quot;</span> <span class="o">+</span> <span class="n">instance</span> <span class="o">+</span> <span class="s2">&quot;] RunPhase1&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
@@ -304,7 +302,7 @@
             <span class="n">phase</span> <span class="o">=</span> <span class="s2">&quot;other&quot;</span>
         <span class="k">return</span> <span class="n">phase</span>
 
-    <span class="k">def</span> <span class="nf">getMEDtime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getMEDtime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">instance</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
             <span class="n">instance</span> <span class="o">=</span> <span class="s2">&quot;0001&quot;</span>
 
@@ -353,7 +351,7 @@
 
         <span class="k">return</span> <span class="p">(</span><span class="n">minval</span><span class="p">,</span> <span class="n">maxval</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">getCOMMtime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getCOMMtime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">instance</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
             <span class="n">instance</span> <span class="o">=</span> <span class="s2">&quot;0001&quot;</span>
         <span class="n">comm_line</span> <span class="o">=</span> <span class="p">[]</span>
@@ -380,7 +378,7 @@
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> time=</span><span class="si">{}</span><span class="s2"> sum=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">heading</span><span class="p">,</span> <span class="n">maxv</span><span class="p">,</span> <span class="n">maxval</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">maxval</span>
 
-    <span class="k">def</span> <span class="nf">getTiming</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getTiming</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">ninst</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">multi_driver</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;MULTI_DRIVER&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">multi_driver</span><span class="p">:</span>
@@ -392,7 +390,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_getTiming</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_getTiming</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inst</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_getTiming</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inst</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="n">components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">get_values</span><span class="p">(</span><span class="s2">&quot;COMP_CLASSES&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">components</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">_GetTimingInfo</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
@@ -1015,9 +1013,17 @@
 
 <div class="viewcode-block" id="get_timing">
 <a class="viewcode-back" href="../../CIME_api/CIME.html#CIME.get_timing.get_timing">[docs]</a>
-<span class="k">def</span> <span class="nf">get_timing</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">lid</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_timing</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">lid</span><span class="p">):</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">_TimingParser</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">lid</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">getTiming</span><span class="p">()</span></div>
+    <span class="n">parser</span><span class="o">.</span><span class="n">getTiming</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">case</span><span class="o">.</span><span class="n">_gitinterface</span><span class="p">:</span>
+        <span class="k">case</span><span class="o">.</span><span class="n">_gitinterface</span><span class="o">.</span><span class="n">_git_command</span><span class="p">(</span><span class="s2">&quot;add&quot;</span><span class="p">,</span> <span class="s2">&quot;*.&quot;</span> <span class="o">+</span> <span class="n">lid</span><span class="p">)</span>
+    <span class="n">append_case_status</span><span class="p">(</span>
+        <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;Timing files created for run </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lid</span><span class="p">),</span>
+        <span class="n">gitinterface</span><span class="o">=</span><span class="n">case</span><span class="o">.</span><span class="n">_gitinterface</span><span class="p">,</span>
+    <span class="p">)</span></div>
 
 </pre></div>
 
@@ -1044,7 +1050,44 @@
       </div>
     </section>
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
+    let baseUriRegex = /(.*\/cime)\/.*/g;
+    let parsedUri = baseUriRegex.exec(document.baseURI);
+
+    if (parsedUri != null && parsedUri.length == 2) {
+      let baseUri = parsedUri[1];
+
+      $.get(`${baseUri}/versions/versions.json`, function(data) {
+        let versionElement = $("#versions");
+
+        Object.keys(data).forEach(function(key) {
+          let value = data[key];
+
+          let item = `<dd><a href="${baseUri}/versions/${key}/html/">${value}</a></dd>`
+
+          versionElement.append(item);
+        });
+      });
+    }
+  </script>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Read the Docs</span>
+      v: master
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      
+      <dl id="versions">
+        <dt>Versions</dt>
+      </dl>
+      
+      
+    </div>
+  </div>
+<script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });

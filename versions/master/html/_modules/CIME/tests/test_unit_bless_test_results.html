@@ -1,24 +1,24 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CIME.tests.test_unit_bless_test_results &mdash; CIME master documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=d05bb7fd" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=30d551ce"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../../../_static/pop_ver.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=30d551ce"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -35,9 +35,6 @@
           <a href="../../../index.html" class="icon icon-home">
             CIME
           </a>
-              <div class="version">
-                master
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -48,8 +45,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../what_cime/index.html">What is CIME?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/index.html">Case Control System Part 1: Basic Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/index.html#case-control-system-part-2-configuration-porting-testing-and-use-cases">Case Control System Part 2: Configuration, Porting, Testing and Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/index.html">Using the Case Control System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/index.html#configuring-the-case-control-system">Configuring the Case Control System</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../build_cpl/index.html">Building a Coupled Model with CIME</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../misc_tools/index.html">Miscellaneous Tools</a></li>
 </ul>
@@ -86,30 +83,31 @@
            <div itemprop="articleBody">
              
   <h1>Source code for CIME.tests.test_unit_bless_test_results</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">unittest</span>
-<span class="kn">import</span> <span class="nn">tempfile</span>
-<span class="kn">from</span> <span class="nn">unittest</span> <span class="kn">import</span> <span class="n">mock</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">unittest</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unittest</span><span class="w"> </span><span class="kn">import</span> <span class="n">mock</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
-<span class="kn">from</span> <span class="nn">CIME.bless_test_results</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.bless_test_results</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">bless_test_results</span><span class="p">,</span>
     <span class="n">_bless_throughput</span><span class="p">,</span>
     <span class="n">_bless_memory</span><span class="p">,</span>
     <span class="n">bless_history</span><span class="p">,</span>
     <span class="n">bless_namelists</span><span class="p">,</span>
-    <span class="n">is_bless_needed</span><span class="p">,</span>
+    <span class="n">is_hist_bless_needed</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.test_status</span><span class="w"> </span><span class="kn">import</span> <span class="n">ALL_PHASES</span><span class="p">,</span> <span class="n">GENERATE_PHASE</span>
 
 
 <div class="viewcode-block" id="TestUnitBlessTestResults">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults">[docs]</a>
-<span class="k">class</span> <span class="nc">TestUnitBlessTestResults</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestUnitBlessTestResults</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
 <div class="viewcode-block" id="TestUnitBlessTestResults.test_bless_history_fail">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults.test_bless_history_fail">[docs]</a>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.generate_baseline&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.compare_baseline&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_bless_history_fail</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compare_baseline</span><span class="p">,</span> <span class="n">generate_baseline</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_history_fail</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compare_baseline</span><span class="p">,</span> <span class="n">generate_baseline</span><span class="p">):</span>
         <span class="n">generate_baseline</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 
         <span class="n">compare_baseline</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
@@ -133,7 +131,7 @@
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults.test_bless_history_force">[docs]</a>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.generate_baseline&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.compare_baseline&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_bless_history_force</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compare_baseline</span><span class="p">,</span> <span class="n">generate_baseline</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_history_force</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compare_baseline</span><span class="p">,</span> <span class="n">generate_baseline</span><span class="p">):</span>
         <span class="n">generate_baseline</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 
         <span class="n">compare_baseline</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
@@ -156,7 +154,7 @@
 <div class="viewcode-block" id="TestUnitBlessTestResults.test_bless_history">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults.test_bless_history">[docs]</a>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.compare_baseline&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_bless_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compare_baseline</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compare_baseline</span><span class="p">):</span>
         <span class="n">compare_baseline</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 
         <span class="n">case</span> <span class="o">=</span> <span class="n">mock</span><span class="o">.</span><span class="n">MagicMock</span><span class="p">()</span>
@@ -176,7 +174,7 @@
 
 <div class="viewcode-block" id="TestUnitBlessTestResults.test_bless_namelists_report_only">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults.test_bless_namelists_report_only">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_bless_namelists_report_only</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_namelists_report_only</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">success</span><span class="p">,</span> <span class="n">comment</span> <span class="o">=</span> <span class="n">bless_namelists</span><span class="p">(</span>
             <span class="s2">&quot;SMS.f19_g16.S&quot;</span><span class="p">,</span>
             <span class="kc">True</span><span class="p">,</span>
@@ -194,7 +192,7 @@
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults.test_bless_namelists_pes_file">[docs]</a>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.get_scripts_root&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.run_cmd&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_bless_namelists_pes_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_cmd</span><span class="p">,</span> <span class="n">get_scripts_root</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_namelists_pes_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_cmd</span><span class="p">,</span> <span class="n">get_scripts_root</span><span class="p">):</span>
         <span class="n">get_scripts_root</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="s2">&quot;/tmp/cime&quot;</span>
 
         <span class="n">run_cmd</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
@@ -223,7 +221,7 @@
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults.test_bless_namelists_new_test_id">[docs]</a>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.get_scripts_root&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.run_cmd&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_bless_namelists_new_test_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_cmd</span><span class="p">,</span> <span class="n">get_scripts_root</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_namelists_new_test_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_cmd</span><span class="p">,</span> <span class="n">get_scripts_root</span><span class="p">):</span>
         <span class="n">get_scripts_root</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="s2">&quot;/tmp/cime&quot;</span>
 
         <span class="n">run_cmd</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
@@ -254,7 +252,7 @@
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults.test_bless_namelists_new_test_root">[docs]</a>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.get_scripts_root&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.run_cmd&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_bless_namelists_new_test_root</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_cmd</span><span class="p">,</span> <span class="n">get_scripts_root</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_namelists_new_test_root</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_cmd</span><span class="p">,</span> <span class="n">get_scripts_root</span><span class="p">):</span>
         <span class="n">get_scripts_root</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="s2">&quot;/tmp/cime&quot;</span>
 
         <span class="n">run_cmd</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
@@ -284,7 +282,7 @@
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults.test_bless_namelists_fail">[docs]</a>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.get_scripts_root&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.run_cmd&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_bless_namelists_fail</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_cmd</span><span class="p">,</span> <span class="n">get_scripts_root</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_namelists_fail</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_cmd</span><span class="p">,</span> <span class="n">get_scripts_root</span><span class="p">):</span>
         <span class="n">get_scripts_root</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="s2">&quot;/tmp/cime&quot;</span>
 
         <span class="n">run_cmd</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
@@ -313,7 +311,7 @@
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults.test_bless_namelists_force">[docs]</a>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.get_scripts_root&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.run_cmd&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_bless_namelists_force</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_cmd</span><span class="p">,</span> <span class="n">get_scripts_root</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_namelists_force</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_cmd</span><span class="p">,</span> <span class="n">get_scripts_root</span><span class="p">):</span>
         <span class="n">get_scripts_root</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="s2">&quot;/tmp/cime&quot;</span>
 
         <span class="n">run_cmd</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
@@ -342,7 +340,7 @@
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults.test_bless_memory_force_error">[docs]</a>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.perf_write_baseline&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.perf_compare_memory_baseline&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_bless_memory_force_error</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_memory_force_error</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">perf_compare_memory_baseline</span><span class="p">,</span> <span class="n">perf_write_baseline</span>
     <span class="p">):</span>
         <span class="n">perf_write_baseline</span><span class="o">.</span><span class="n">side_effect</span> <span class="o">=</span> <span class="ne">Exception</span>
@@ -367,7 +365,7 @@
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults.test_bless_memory_force">[docs]</a>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.perf_write_baseline&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.perf_compare_memory_baseline&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_bless_memory_force</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_memory_force</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">perf_compare_memory_baseline</span><span class="p">,</span> <span class="n">perf_write_baseline</span>
     <span class="p">):</span>
         <span class="n">perf_compare_memory_baseline</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
@@ -386,7 +384,7 @@
 <div class="viewcode-block" id="TestUnitBlessTestResults.test_bless_memory_report_only">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults.test_bless_memory_report_only">[docs]</a>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.perf_compare_memory_baseline&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_bless_memory_report_only</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">perf_compare_memory_baseline</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_memory_report_only</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">perf_compare_memory_baseline</span><span class="p">):</span>
         <span class="n">perf_compare_memory_baseline</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 
         <span class="n">case</span> <span class="o">=</span> <span class="n">mock</span><span class="o">.</span><span class="n">MagicMock</span><span class="p">()</span>
@@ -403,7 +401,7 @@
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults.test_bless_memory_general_error">[docs]</a>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.perf_write_baseline&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.perf_compare_memory_baseline&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_bless_memory_general_error</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_memory_general_error</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">perf_compare_memory_baseline</span><span class="p">,</span> <span class="n">perf_write_baseline</span>
     <span class="p">):</span>
         <span class="n">perf_compare_memory_baseline</span><span class="o">.</span><span class="n">side_effect</span> <span class="o">=</span> <span class="ne">Exception</span>
@@ -422,7 +420,7 @@
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults.test_bless_memory_file_not_found_error">[docs]</a>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.perf_write_baseline&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.perf_compare_memory_baseline&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_bless_memory_file_not_found_error</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_memory_file_not_found_error</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">perf_compare_memory_baseline</span><span class="p">,</span> <span class="n">perf_write_baseline</span>
     <span class="p">):</span>
         <span class="n">perf_compare_memory_baseline</span><span class="o">.</span><span class="n">side_effect</span> <span class="o">=</span> <span class="ne">FileNotFoundError</span>
@@ -440,7 +438,7 @@
 <div class="viewcode-block" id="TestUnitBlessTestResults.test_bless_memory">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults.test_bless_memory">[docs]</a>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.perf_compare_memory_baseline&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_bless_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">perf_compare_memory_baseline</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">perf_compare_memory_baseline</span><span class="p">):</span>
         <span class="n">perf_compare_memory_baseline</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 
         <span class="n">case</span> <span class="o">=</span> <span class="n">mock</span><span class="o">.</span><span class="n">MagicMock</span><span class="p">()</span>
@@ -456,7 +454,7 @@
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults.test_bless_throughput_force_error">[docs]</a>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.perf_write_baseline&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.perf_compare_throughput_baseline&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_bless_throughput_force_error</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_throughput_force_error</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">perf_compare_throughput_baseline</span><span class="p">,</span> <span class="n">perf_write_baseline</span>
     <span class="p">):</span>
         <span class="n">perf_write_baseline</span><span class="o">.</span><span class="n">side_effect</span> <span class="o">=</span> <span class="ne">Exception</span>
@@ -478,7 +476,7 @@
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults.test_bless_throughput_force">[docs]</a>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.perf_write_baseline&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.perf_compare_throughput_baseline&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_bless_throughput_force</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_throughput_force</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">perf_compare_throughput_baseline</span><span class="p">,</span> <span class="n">perf_write_baseline</span>
     <span class="p">):</span>
         <span class="n">perf_compare_throughput_baseline</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
@@ -497,7 +495,7 @@
 <div class="viewcode-block" id="TestUnitBlessTestResults.test_bless_throughput_report_only">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults.test_bless_throughput_report_only">[docs]</a>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.perf_compare_throughput_baseline&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_bless_throughput_report_only</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">perf_compare_throughput_baseline</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_throughput_report_only</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">perf_compare_throughput_baseline</span><span class="p">):</span>
         <span class="n">perf_compare_throughput_baseline</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 
         <span class="n">case</span> <span class="o">=</span> <span class="n">mock</span><span class="o">.</span><span class="n">MagicMock</span><span class="p">()</span>
@@ -513,7 +511,7 @@
 <div class="viewcode-block" id="TestUnitBlessTestResults.test_bless_throughput_general_error">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults.test_bless_throughput_general_error">[docs]</a>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.perf_compare_throughput_baseline&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_bless_throughput_general_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">perf_compare_throughput_baseline</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_throughput_general_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">perf_compare_throughput_baseline</span><span class="p">):</span>
         <span class="n">perf_compare_throughput_baseline</span><span class="o">.</span><span class="n">side_effect</span> <span class="o">=</span> <span class="ne">Exception</span>
 
         <span class="n">case</span> <span class="o">=</span> <span class="n">mock</span><span class="o">.</span><span class="n">MagicMock</span><span class="p">()</span>
@@ -530,7 +528,7 @@
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults.test_bless_throughput_file_not_found_error">[docs]</a>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.perf_write_baseline&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.perf_compare_throughput_baseline&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_bless_throughput_file_not_found_error</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_throughput_file_not_found_error</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">perf_compare_throughput_baseline</span><span class="p">,</span>
         <span class="n">perf_write_baseline</span><span class="p">,</span>
@@ -550,7 +548,7 @@
 <div class="viewcode-block" id="TestUnitBlessTestResults.test_bless_throughput">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults.test_bless_throughput">[docs]</a>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.perf_compare_throughput_baseline&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_bless_throughput</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">perf_compare_throughput_baseline</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_throughput</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">perf_compare_throughput_baseline</span><span class="p">):</span>
         <span class="n">perf_compare_throughput_baseline</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 
         <span class="n">case</span> <span class="o">=</span> <span class="n">mock</span><span class="o">.</span><span class="n">MagicMock</span><span class="p">()</span>
@@ -569,7 +567,7 @@
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.Case&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.TestStatus&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.get_test_status_files&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_bless_perf</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_perf</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">get_test_status_files</span><span class="p">,</span>
         <span class="n">TestStatus</span><span class="p">,</span>
@@ -613,7 +611,7 @@
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.Case&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.TestStatus&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.get_test_status_files&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_bless_memory_only</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_memory_only</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">get_test_status_files</span><span class="p">,</span>
         <span class="n">TestStatus</span><span class="p">,</span>
@@ -627,7 +625,7 @@
 
         <span class="n">ts</span> <span class="o">=</span> <span class="n">TestStatus</span><span class="o">.</span><span class="n">return_value</span>
         <span class="n">ts</span><span class="o">.</span><span class="n">get_name</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="s2">&quot;SMS.f19_g16.S.docker_gnu&quot;</span>
-        <span class="n">ts</span><span class="o">.</span><span class="n">get_overall_test_status</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;PASS&quot;</span><span class="p">,</span> <span class="s2">&quot;RUN&quot;</span><span class="p">)</span>
+        <span class="n">ts</span><span class="o">.</span><span class="n">get_overall_test_status</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;DIFF&quot;</span><span class="p">,</span> <span class="s2">&quot;MEMCOMP&quot;</span><span class="p">)</span>
         <span class="n">ts</span><span class="o">.</span><span class="n">get_status</span><span class="o">.</span><span class="n">side_effect</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;PASS&quot;</span><span class="p">,</span> <span class="s2">&quot;PASS&quot;</span><span class="p">,</span> <span class="s2">&quot;FAIL&quot;</span><span class="p">,</span> <span class="s2">&quot;FAIL&quot;</span><span class="p">]</span>
 
         <span class="n">case</span> <span class="o">=</span> <span class="n">Case</span><span class="o">.</span><span class="n">return_value</span><span class="o">.</span><span class="fm">__enter__</span><span class="o">.</span><span class="n">return_value</span>
@@ -655,7 +653,7 @@
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.Case&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.TestStatus&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.get_test_status_files&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_bless_throughput_only</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_throughput_only</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">get_test_status_files</span><span class="p">,</span>
         <span class="n">TestStatus</span><span class="p">,</span>
@@ -669,7 +667,7 @@
 
         <span class="n">ts</span> <span class="o">=</span> <span class="n">TestStatus</span><span class="o">.</span><span class="n">return_value</span>
         <span class="n">ts</span><span class="o">.</span><span class="n">get_name</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="s2">&quot;SMS.f19_g16.S.docker_gnu&quot;</span>
-        <span class="n">ts</span><span class="o">.</span><span class="n">get_overall_test_status</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;PASS&quot;</span><span class="p">,</span> <span class="s2">&quot;RUN&quot;</span><span class="p">)</span>
+        <span class="n">ts</span><span class="o">.</span><span class="n">get_overall_test_status</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;DIFF&quot;</span><span class="p">,</span> <span class="s2">&quot;TPUTCOMP&quot;</span><span class="p">)</span>
         <span class="n">ts</span><span class="o">.</span><span class="n">get_status</span><span class="o">.</span><span class="n">side_effect</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;PASS&quot;</span><span class="p">,</span> <span class="s2">&quot;PASS&quot;</span><span class="p">,</span> <span class="s2">&quot;FAIL&quot;</span><span class="p">,</span> <span class="s2">&quot;FAIL&quot;</span><span class="p">]</span>
 
         <span class="n">case</span> <span class="o">=</span> <span class="n">Case</span><span class="o">.</span><span class="n">return_value</span><span class="o">.</span><span class="fm">__enter__</span><span class="o">.</span><span class="n">return_value</span>
@@ -696,7 +694,7 @@
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.Case&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.TestStatus&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.get_test_status_files&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_bless_namelists_only</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_namelists_only</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">get_test_status_files</span><span class="p">,</span>
         <span class="n">TestStatus</span><span class="p">,</span>
@@ -735,7 +733,7 @@
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.Case&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.TestStatus&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.get_test_status_files&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_bless_hist_only</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_hist_only</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">get_test_status_files</span><span class="p">,</span>
         <span class="n">TestStatus</span><span class="p">,</span>
@@ -773,7 +771,7 @@
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.Case&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.TestStatus&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.get_test_status_files&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_specific</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get_test_status_files</span><span class="p">,</span> <span class="n">TestStatus</span><span class="p">,</span> <span class="n">Case</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_specific</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get_test_status_files</span><span class="p">,</span> <span class="n">TestStatus</span><span class="p">,</span> <span class="n">Case</span><span class="p">):</span>
         <span class="n">get_test_status_files</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;/tmp/cases/SMS.f19_g16.S.docker_gnu.12345/TestStatus&quot;</span><span class="p">,</span>
             <span class="s2">&quot;/tmp/cases/PET.f19_g16.S.docker-gnu.12345/TestStatus&quot;</span><span class="p">,</span>
@@ -807,7 +805,7 @@
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.Case&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.TestStatus&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.get_test_status_files&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_bless_tests_results_homme</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_tests_results_homme</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">get_test_status_files</span><span class="p">,</span>
         <span class="n">TestStatus</span><span class="p">,</span>
@@ -858,7 +856,7 @@
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.Case&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.TestStatus&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.get_test_status_files&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_bless_tests_results_fail</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_tests_results_fail</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">get_test_status_files</span><span class="p">,</span>
         <span class="n">TestStatus</span><span class="p">,</span>
@@ -909,7 +907,7 @@
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.Case&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.TestStatus&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.get_test_status_files&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_no_skip_pass</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_no_skip_pass</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">get_test_status_files</span><span class="p">,</span>
         <span class="n">TestStatus</span><span class="p">,</span>
@@ -956,7 +954,7 @@
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.Case&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.TestStatus&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.get_test_status_files&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_baseline_root_none</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get_test_status_files</span><span class="p">,</span> <span class="n">TestStatus</span><span class="p">,</span> <span class="n">Case</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_baseline_root_none</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get_test_status_files</span><span class="p">,</span> <span class="n">TestStatus</span><span class="p">,</span> <span class="n">Case</span><span class="p">):</span>
         <span class="n">get_test_status_files</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;/tmp/cases/SMS.f19_g16.S.docker_gnu.12345/TestStatus&quot;</span><span class="p">,</span>
             <span class="s2">&quot;/tmp/cases/PET.f19_g16.S.docker-gnu.12345/TestStatus&quot;</span><span class="p">,</span>
@@ -983,13 +981,21 @@
 
 <div class="viewcode-block" id="TestUnitBlessTestResults.test_baseline_name_none">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults.test_baseline_name_none">[docs]</a>
+    <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.utils.get_current_branch&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.bless_namelists&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.Case&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.TestStatus&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.get_test_status_files&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_baseline_name_none</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">get_test_status_files</span><span class="p">,</span> <span class="n">TestStatus</span><span class="p">,</span> <span class="n">Case</span><span class="p">,</span> <span class="n">bless_namelists</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_baseline_name_none</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">get_test_status_files</span><span class="p">,</span>
+        <span class="n">TestStatus</span><span class="p">,</span>
+        <span class="n">Case</span><span class="p">,</span>
+        <span class="n">bless_namelists</span><span class="p">,</span>
+        <span class="n">get_current_branch</span><span class="p">,</span>
     <span class="p">):</span>
+        <span class="n">get_current_branch</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="s2">&quot;master&quot;</span>
+
         <span class="n">bless_namelists</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 
         <span class="n">get_test_status_files</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">[</span>
@@ -1020,7 +1026,7 @@
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.Case&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.TestStatus&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.get_test_status_files&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_exclude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get_test_status_files</span><span class="p">,</span> <span class="n">TestStatus</span><span class="p">,</span> <span class="n">Case</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_exclude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get_test_status_files</span><span class="p">,</span> <span class="n">TestStatus</span><span class="p">,</span> <span class="n">Case</span><span class="p">):</span>
         <span class="n">get_test_status_files</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;/tmp/cases/SMS.f19_g16.S.docker_gnu.12345/TestStatus&quot;</span><span class="p">,</span>
             <span class="s2">&quot;/tmp/cases/PET.f19_g16.S.docker-gnu.12345/TestStatus&quot;</span><span class="p">,</span>
@@ -1050,7 +1056,7 @@
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.Case&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.TestStatus&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.get_test_status_files&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_multiple_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get_test_status_files</span><span class="p">,</span> <span class="n">TestStatus</span><span class="p">,</span> <span class="n">Case</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_multiple_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get_test_status_files</span><span class="p">,</span> <span class="n">TestStatus</span><span class="p">,</span> <span class="n">Case</span><span class="p">):</span>
         <span class="n">get_test_status_files</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;/tmp/cases/SMS.f19_g16.S.docker_gnu.12345/TestStatus&quot;</span><span class="p">,</span>
             <span class="s2">&quot;/tmp/cases/SMS.f19_g16.S.docker-gnu.23456/TestStatus&quot;</span><span class="p">,</span>
@@ -1079,7 +1085,7 @@
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.Case&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.TestStatus&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.get_test_status_files&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_bless_tests_no_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get_test_status_files</span><span class="p">,</span> <span class="n">TestStatus</span><span class="p">,</span> <span class="n">Case</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_tests_no_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get_test_status_files</span><span class="p">,</span> <span class="n">TestStatus</span><span class="p">,</span> <span class="n">Case</span><span class="p">):</span>
         <span class="n">get_test_status_files</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;/tmp/cases/SMS.f19_g16.S.docker_gnu/TestStatus&quot;</span><span class="p">,</span>
             <span class="s2">&quot;/tmp/cases/PET.f19_g16.S.docker_gnu/TestStatus&quot;</span><span class="p">,</span>
@@ -1109,7 +1115,7 @@
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.Case&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.TestStatus&quot;</span><span class="p">)</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;CIME.bless_test_results.get_test_status_files&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_bless_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get_test_status_files</span><span class="p">,</span> <span class="n">TestStatus</span><span class="p">,</span> <span class="n">Case</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bless_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get_test_status_files</span><span class="p">,</span> <span class="n">TestStatus</span><span class="p">,</span> <span class="n">Case</span><span class="p">):</span>
         <span class="n">get_test_status_files</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;/tmp/cases/SMS.f19_g16.S.docker_gnu/TestStatus&quot;</span><span class="p">,</span>
         <span class="p">]</span>
@@ -1134,7 +1140,7 @@
 
 <div class="viewcode-block" id="TestUnitBlessTestResults.test_is_bless_needed_no_skip_fail">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults.test_is_bless_needed_no_skip_fail">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_is_bless_needed_no_skip_fail</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_is_bless_needed_no_skip_fail</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">ts</span> <span class="o">=</span> <span class="n">mock</span><span class="o">.</span><span class="n">MagicMock</span><span class="p">()</span>
         <span class="n">ts</span><span class="o">.</span><span class="n">get_status</span><span class="o">.</span><span class="n">side_effect</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;PASS&quot;</span><span class="p">,</span>
@@ -1142,7 +1148,7 @@
 
         <span class="n">broken_blesses</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="n">needed</span> <span class="o">=</span> <span class="n">is_bless_needed</span><span class="p">(</span>
+        <span class="n">needed</span> <span class="o">=</span> <span class="n">is_hist_bless_needed</span><span class="p">(</span>
             <span class="s2">&quot;SMS.f19_g16.A&quot;</span><span class="p">,</span> <span class="n">ts</span><span class="p">,</span> <span class="n">broken_blesses</span><span class="p">,</span> <span class="s2">&quot;PASS&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;RUN&quot;</span>
         <span class="p">)</span>
 
@@ -1152,15 +1158,18 @@
 
 <div class="viewcode-block" id="TestUnitBlessTestResults.test_is_bless_needed_overall_fail">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults.test_is_bless_needed_overall_fail">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_is_bless_needed_overall_fail</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_is_bless_needed_overall_fail</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">ts</span> <span class="o">=</span> <span class="n">mock</span><span class="o">.</span><span class="n">MagicMock</span><span class="p">()</span>
+
+        <span class="c1"># get_status() calls in is_hist_bless_needed()</span>
         <span class="n">ts</span><span class="o">.</span><span class="n">get_status</span><span class="o">.</span><span class="n">side_effect</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;PASS&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;PASS&quot;</span><span class="p">,</span>  <span class="c1"># Check of RUN_PHASE at top of function</span>
+            <span class="s2">&quot;PASS&quot;</span><span class="p">,</span>  <span class="c1"># Check of GENERATE_PHASE</span>
         <span class="p">]</span>
 
         <span class="n">broken_blesses</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="n">needed</span> <span class="o">=</span> <span class="n">is_bless_needed</span><span class="p">(</span>
+        <span class="n">needed</span> <span class="o">=</span> <span class="n">is_hist_bless_needed</span><span class="p">(</span>
             <span class="s2">&quot;SMS.f19_g16.A&quot;</span><span class="p">,</span> <span class="n">ts</span><span class="p">,</span> <span class="n">broken_blesses</span><span class="p">,</span> <span class="s2">&quot;FAIL&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;RUN&quot;</span>
         <span class="p">)</span>
 
@@ -1168,15 +1177,39 @@
         <span class="k">assert</span> <span class="n">broken_blesses</span> <span class="o">==</span> <span class="p">[(</span><span class="s2">&quot;SMS.f19_g16.A&quot;</span><span class="p">,</span> <span class="s2">&quot;test did not pass&quot;</span><span class="p">)]</span></div>
 
 
+<div class="viewcode-block" id="TestUnitBlessTestResults.test_is_bless_needed_generate_fail">
+<a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults.test_is_bless_needed_generate_fail">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_is_bless_needed_generate_fail</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ts</span> <span class="o">=</span> <span class="n">mock</span><span class="o">.</span><span class="n">MagicMock</span><span class="p">()</span>
+
+        <span class="c1"># First two get_status() calls in is_hist_bless_needed()</span>
+        <span class="n">side_effect</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;PASS&quot;</span><span class="p">,</span>  <span class="c1"># Check of RUN_PHASE at top of function</span>
+            <span class="s2">&quot;FAIL&quot;</span><span class="p">,</span>  <span class="c1"># Check of GENERATE_PHASE</span>
+        <span class="p">]</span>
+        <span class="c1"># Checks in `for p in ALL_PHASES` loop</span>
+        <span class="n">side_effect</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;PASS&quot;</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">ALL_PHASES</span> <span class="k">if</span> <span class="n">p</span> <span class="o">!=</span> <span class="n">GENERATE_PHASE</span><span class="p">]</span>
+        <span class="c1"># Save</span>
+        <span class="n">ts</span><span class="o">.</span><span class="n">get_status</span><span class="o">.</span><span class="n">side_effect</span> <span class="o">=</span> <span class="n">side_effect</span>
+
+        <span class="n">broken_blesses</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">needed</span> <span class="o">=</span> <span class="n">is_hist_bless_needed</span><span class="p">(</span>
+            <span class="s2">&quot;SMS.f19_g16.A&quot;</span><span class="p">,</span> <span class="n">ts</span><span class="p">,</span> <span class="n">broken_blesses</span><span class="p">,</span> <span class="s2">&quot;FAIL&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;RUN&quot;</span>
+        <span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">needed</span></div>
+
+
 <div class="viewcode-block" id="TestUnitBlessTestResults.test_is_bless_needed_baseline_fail">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults.test_is_bless_needed_baseline_fail">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_is_bless_needed_baseline_fail</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_is_bless_needed_baseline_fail</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">ts</span> <span class="o">=</span> <span class="n">mock</span><span class="o">.</span><span class="n">MagicMock</span><span class="p">()</span>
         <span class="n">ts</span><span class="o">.</span><span class="n">get_status</span><span class="o">.</span><span class="n">side_effect</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;PASS&quot;</span><span class="p">,</span> <span class="s2">&quot;FAIL&quot;</span><span class="p">]</span>
 
         <span class="n">broken_blesses</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="n">needed</span> <span class="o">=</span> <span class="n">is_bless_needed</span><span class="p">(</span>
+        <span class="n">needed</span> <span class="o">=</span> <span class="n">is_hist_bless_needed</span><span class="p">(</span>
             <span class="s2">&quot;SMS.f19_g16.A&quot;</span><span class="p">,</span> <span class="n">ts</span><span class="p">,</span> <span class="n">broken_blesses</span><span class="p">,</span> <span class="s2">&quot;PASS&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;RUN&quot;</span>
         <span class="p">)</span>
 
@@ -1186,7 +1219,7 @@
 
 <div class="viewcode-block" id="TestUnitBlessTestResults.test_is_bless_needed_run_phase_fail">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults.test_is_bless_needed_run_phase_fail">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_is_bless_needed_run_phase_fail</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_is_bless_needed_run_phase_fail</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">ts</span> <span class="o">=</span> <span class="n">mock</span><span class="o">.</span><span class="n">MagicMock</span><span class="p">()</span>
         <span class="n">ts</span><span class="o">.</span><span class="n">get_status</span><span class="o">.</span><span class="n">side_effect</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;FAIL&quot;</span><span class="p">,</span>
@@ -1194,7 +1227,7 @@
 
         <span class="n">broken_blesses</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="n">needed</span> <span class="o">=</span> <span class="n">is_bless_needed</span><span class="p">(</span>
+        <span class="n">needed</span> <span class="o">=</span> <span class="n">is_hist_bless_needed</span><span class="p">(</span>
             <span class="s2">&quot;SMS.f19_g16.A&quot;</span><span class="p">,</span> <span class="n">ts</span><span class="p">,</span> <span class="n">broken_blesses</span><span class="p">,</span> <span class="s2">&quot;PASS&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;RUN&quot;</span>
         <span class="p">)</span>
 
@@ -1204,13 +1237,13 @@
 
 <div class="viewcode-block" id="TestUnitBlessTestResults.test_is_bless_needed_no_run_phase">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults.test_is_bless_needed_no_run_phase">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_is_bless_needed_no_run_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_is_bless_needed_no_run_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">ts</span> <span class="o">=</span> <span class="n">mock</span><span class="o">.</span><span class="n">MagicMock</span><span class="p">()</span>
         <span class="n">ts</span><span class="o">.</span><span class="n">get_status</span><span class="o">.</span><span class="n">side_effect</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span>
 
         <span class="n">broken_blesses</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="n">needed</span> <span class="o">=</span> <span class="n">is_bless_needed</span><span class="p">(</span>
+        <span class="n">needed</span> <span class="o">=</span> <span class="n">is_hist_bless_needed</span><span class="p">(</span>
             <span class="s2">&quot;SMS.f19_g16.A&quot;</span><span class="p">,</span> <span class="n">ts</span><span class="p">,</span> <span class="n">broken_blesses</span><span class="p">,</span> <span class="s2">&quot;PASS&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;RUN&quot;</span>
         <span class="p">)</span>
 
@@ -1220,13 +1253,13 @@
 
 <div class="viewcode-block" id="TestUnitBlessTestResults.test_is_bless_needed">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_unit_bless_test_results.TestUnitBlessTestResults.test_is_bless_needed">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_is_bless_needed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_is_bless_needed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">ts</span> <span class="o">=</span> <span class="n">mock</span><span class="o">.</span><span class="n">MagicMock</span><span class="p">()</span>
         <span class="n">ts</span><span class="o">.</span><span class="n">get_status</span><span class="o">.</span><span class="n">side_effect</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;PASS&quot;</span><span class="p">,</span> <span class="s2">&quot;PASS&quot;</span><span class="p">]</span>
 
         <span class="n">broken_blesses</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="n">needed</span> <span class="o">=</span> <span class="n">is_bless_needed</span><span class="p">(</span>
+        <span class="n">needed</span> <span class="o">=</span> <span class="n">is_hist_bless_needed</span><span class="p">(</span>
             <span class="s2">&quot;SMS.f19_g16.A&quot;</span><span class="p">,</span> <span class="n">ts</span><span class="p">,</span> <span class="n">broken_blesses</span><span class="p">,</span> <span class="s2">&quot;PASS&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;RUN&quot;</span>
         <span class="p">)</span>
 
@@ -1258,7 +1291,44 @@
       </div>
     </section>
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
+    let baseUriRegex = /(.*\/cime)\/.*/g;
+    let parsedUri = baseUriRegex.exec(document.baseURI);
+
+    if (parsedUri != null && parsedUri.length == 2) {
+      let baseUri = parsedUri[1];
+
+      $.get(`${baseUri}/versions/versions.json`, function(data) {
+        let versionElement = $("#versions");
+
+        Object.keys(data).forEach(function(key) {
+          let value = data[key];
+
+          let item = `<dd><a href="${baseUri}/versions/${key}/html/">${value}</a></dd>`
+
+          versionElement.append(item);
+        });
+      });
+    }
+  </script>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Read the Docs</span>
+      v: master
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      
+      <dl id="versions">
+        <dt>Versions</dt>
+      </dl>
+      
+      
+    </div>
+  </div>
+<script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });

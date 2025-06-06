@@ -1,24 +1,24 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CIME.tests.test_sys_wait_for_tests &mdash; CIME master documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=d05bb7fd" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=30d551ce"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../../../_static/pop_ver.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=30d551ce"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -35,9 +35,6 @@
           <a href="../../../index.html" class="icon icon-home">
             CIME
           </a>
-              <div class="version">
-                master
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -48,8 +45,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../what_cime/index.html">What is CIME?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/index.html">Case Control System Part 1: Basic Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/index.html#case-control-system-part-2-configuration-porting-testing-and-use-cases">Case Control System Part 2: Configuration, Porting, Testing and Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/index.html">Using the Case Control System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/index.html#configuring-the-case-control-system">Configuring the Case Control System</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../build_cpl/index.html">Building a Coupled Model with CIME</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../misc_tools/index.html">Miscellaneous Tools</a></li>
 </ul>
@@ -88,25 +85,25 @@
   <h1>Source code for CIME.tests.test_sys_wait_for_tests</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">signal</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">signal</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
 
-<span class="kn">from</span> <span class="nn">CIME</span> <span class="kn">import</span> <span class="n">utils</span>
-<span class="kn">from</span> <span class="nn">CIME</span> <span class="kn">import</span> <span class="n">test_status</span>
-<span class="kn">from</span> <span class="nn">CIME.tests</span> <span class="kn">import</span> <span class="n">base</span>
-<span class="kn">from</span> <span class="nn">CIME.tests</span> <span class="kn">import</span> <span class="n">utils</span> <span class="k">as</span> <span class="n">test_utils</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME</span><span class="w"> </span><span class="kn">import</span> <span class="n">test_status</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">base</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span> <span class="k">as</span> <span class="n">test_utils</span>
 
 
 <div class="viewcode-block" id="TestWaitForTests">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_sys_wait_for_tests.TestWaitForTests">[docs]</a>
-<span class="k">class</span> <span class="nc">TestWaitForTests</span><span class="p">(</span><span class="n">base</span><span class="o">.</span><span class="n">BaseTestCase</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestWaitForTests</span><span class="p">(</span><span class="n">base</span><span class="o">.</span><span class="n">BaseTestCase</span><span class="p">):</span>
 <div class="viewcode-block" id="TestWaitForTests.setUp">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_sys_wait_for_tests.TestWaitForTests.setUp">[docs]</a>
-    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setUp</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_testroot</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TEST_ROOT</span><span class="p">,</span> <span class="s2">&quot;TestWaitForTests&quot;</span><span class="p">)</span>
@@ -196,7 +193,7 @@
 
 <div class="viewcode-block" id="TestWaitForTests.tearDown">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_sys_wait_for_tests.TestWaitForTests.tearDown">[docs]</a>
-    <span class="k">def</span> <span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">tearDown</span><span class="p">()</span>
 
         <span class="n">do_teardown</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()</span> <span class="o">==</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">NO_TEARDOWN</span>
@@ -208,7 +205,7 @@
 
 <div class="viewcode-block" id="TestWaitForTests.simple_test">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_sys_wait_for_tests.TestWaitForTests.simple_test">[docs]</a>
-    <span class="k">def</span> <span class="nf">simple_test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">testdir</span><span class="p">,</span> <span class="n">expected_results</span><span class="p">,</span> <span class="n">extra_args</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">build_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">simple_test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">testdir</span><span class="p">,</span> <span class="n">expected_results</span><span class="p">,</span> <span class="n">extra_args</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">build_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># Need these flags to test dashboard if e3sm</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">create_test_flag_mode</span> <span class="o">==</span> <span class="s2">&quot;e3sm&quot;</span> <span class="ow">and</span> <span class="n">build_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">extra_args</span> <span class="o">+=</span> <span class="s2">&quot; -b </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">build_name</span>
@@ -246,7 +243,7 @@
 
 <div class="viewcode-block" id="TestWaitForTests.threaded_test">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_sys_wait_for_tests.TestWaitForTests.threaded_test">[docs]</a>
-    <span class="k">def</span> <span class="nf">threaded_test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">testdir</span><span class="p">,</span> <span class="n">expected_results</span><span class="p">,</span> <span class="n">extra_args</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">build_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">threaded_test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">testdir</span><span class="p">,</span> <span class="n">expected_results</span><span class="p">,</span> <span class="n">extra_args</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">build_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">simple_test</span><span class="p">(</span><span class="n">testdir</span><span class="p">,</span> <span class="n">expected_results</span><span class="p">,</span> <span class="n">extra_args</span><span class="p">,</span> <span class="n">build_name</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -255,34 +252,34 @@
 
 <div class="viewcode-block" id="TestWaitForTests.test_wait_for_test_all_pass">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_sys_wait_for_tests.TestWaitForTests.test_wait_for_test_all_pass">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_wait_for_test_all_pass</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_wait_for_test_all_pass</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">simple_test</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_testdir_all_pass</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;PASS&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TestWaitForTests.test_wait_for_test_with_fail">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_sys_wait_for_tests.TestWaitForTests.test_wait_for_test_with_fail">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_wait_for_test_with_fail</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_wait_for_test_with_fail</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">expected_results</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;FAIL&quot;</span> <span class="k">if</span> <span class="n">item</span> <span class="o">==</span> <span class="mi">5</span> <span class="k">else</span> <span class="s2">&quot;PASS&quot;</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">simple_test</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_testdir_with_fail</span><span class="p">,</span> <span class="n">expected_results</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TestWaitForTests.test_wait_for_test_no_wait">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_sys_wait_for_tests.TestWaitForTests.test_wait_for_test_no_wait">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_wait_for_test_no_wait</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_wait_for_test_no_wait</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">expected_results</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;PEND&quot;</span> <span class="k">if</span> <span class="n">item</span> <span class="o">==</span> <span class="mi">5</span> <span class="k">else</span> <span class="s2">&quot;PASS&quot;</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">simple_test</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_testdir_unfinished</span><span class="p">,</span> <span class="n">expected_results</span><span class="p">,</span> <span class="s2">&quot;-n&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TestWaitForTests.test_wait_for_test_timeout">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_sys_wait_for_tests.TestWaitForTests.test_wait_for_test_timeout">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_wait_for_test_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_wait_for_test_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">expected_results</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;PEND&quot;</span> <span class="k">if</span> <span class="n">item</span> <span class="o">==</span> <span class="mi">5</span> <span class="k">else</span> <span class="s2">&quot;PASS&quot;</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">simple_test</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_testdir_unfinished</span><span class="p">,</span> <span class="n">expected_results</span><span class="p">,</span> <span class="s2">&quot;--timeout=3&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TestWaitForTests.test_wait_for_test_wait_for_pend">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_sys_wait_for_tests.TestWaitForTests.test_wait_for_test_wait_for_pend">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_wait_for_test_wait_for_pend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_wait_for_test_wait_for_pend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">run_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
             <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">threaded_test</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_testdir_unfinished</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;PASS&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span>
         <span class="p">)</span>
@@ -312,7 +309,7 @@
 
 <div class="viewcode-block" id="TestWaitForTests.test_wait_for_test_wait_for_missing_run_phase">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_sys_wait_for_tests.TestWaitForTests.test_wait_for_test_wait_for_missing_run_phase">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_wait_for_test_wait_for_missing_run_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_wait_for_test_wait_for_missing_run_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">run_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
             <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">threaded_test</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_testdir_unfinished2</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;PASS&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span>
         <span class="p">)</span>
@@ -342,7 +339,7 @@
 
 <div class="viewcode-block" id="TestWaitForTests.test_wait_for_test_wait_kill">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_sys_wait_for_tests.TestWaitForTests.test_wait_for_test_wait_kill">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_wait_for_test_wait_kill</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_wait_for_test_wait_kill</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">expected_results</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;PEND&quot;</span> <span class="k">if</span> <span class="n">item</span> <span class="o">==</span> <span class="mi">5</span> <span class="k">else</span> <span class="s2">&quot;PASS&quot;</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
         <span class="n">run_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
             <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">threaded_test</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_testdir_unfinished</span><span class="p">,</span> <span class="n">expected_results</span><span class="p">)</span>
@@ -370,7 +367,7 @@
 
 <div class="viewcode-block" id="TestWaitForTests.test_wait_for_test_cdash_pass">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_sys_wait_for_tests.TestWaitForTests.test_wait_for_test_cdash_pass">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_wait_for_test_cdash_pass</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_wait_for_test_cdash_pass</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">expected_results</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;PASS&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span>
         <span class="n">build_name</span> <span class="o">=</span> <span class="s2">&quot;regression_test_pass_&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timestamp</span>
         <span class="n">run_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
@@ -396,7 +393,7 @@
 
 <div class="viewcode-block" id="TestWaitForTests.test_wait_for_test_cdash_kill">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_sys_wait_for_tests.TestWaitForTests.test_wait_for_test_cdash_kill">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_wait_for_test_cdash_kill</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_wait_for_test_cdash_kill</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">expected_results</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;PEND&quot;</span> <span class="k">if</span> <span class="n">item</span> <span class="o">==</span> <span class="mi">5</span> <span class="k">else</span> <span class="s2">&quot;PASS&quot;</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
         <span class="n">build_name</span> <span class="o">=</span> <span class="s2">&quot;regression_test_kill_&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timestamp</span>
         <span class="n">run_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
@@ -448,7 +445,7 @@
 
 <div class="viewcode-block" id="TestWaitForTests.live_test_impl">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_sys_wait_for_tests.TestWaitForTests.live_test_impl">[docs]</a>
-    <span class="k">def</span> <span class="nf">live_test_impl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">testdir</span><span class="p">,</span> <span class="n">expected_results</span><span class="p">,</span> <span class="n">last_phase</span><span class="p">,</span> <span class="n">last_status</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">live_test_impl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">testdir</span><span class="p">,</span> <span class="n">expected_results</span><span class="p">,</span> <span class="n">last_phase</span><span class="p">,</span> <span class="n">last_status</span><span class="p">):</span>
         <span class="n">run_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
             <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">threaded_test</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">testdir</span><span class="p">,</span> <span class="n">expected_results</span><span class="p">)</span>
         <span class="p">)</span>
@@ -497,7 +494,7 @@
 
 <div class="viewcode-block" id="TestWaitForTests.test_wait_for_test_test_status_integration_pass">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_sys_wait_for_tests.TestWaitForTests.test_wait_for_test_test_status_integration_pass">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_wait_for_test_test_status_integration_pass</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_wait_for_test_test_status_integration_pass</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">live_test_impl</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_testdir_teststatus1</span><span class="p">,</span>
             <span class="p">[</span><span class="s2">&quot;PASS&quot;</span><span class="p">],</span>
@@ -508,7 +505,7 @@
 
 <div class="viewcode-block" id="TestWaitForTests.test_wait_for_test_test_status_integration_submit_fail">
 <a class="viewcode-back" href="../../../CIME_api/CIME.tests.html#CIME.tests.test_sys_wait_for_tests.TestWaitForTests.test_wait_for_test_test_status_integration_submit_fail">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_wait_for_test_test_status_integration_submit_fail</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_wait_for_test_test_status_integration_submit_fail</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">live_test_impl</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_testdir_teststatus1</span><span class="p">,</span>
             <span class="p">[</span><span class="s2">&quot;FAIL&quot;</span><span class="p">],</span>
@@ -542,7 +539,44 @@
       </div>
     </section>
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
+    let baseUriRegex = /(.*\/cime)\/.*/g;
+    let parsedUri = baseUriRegex.exec(document.baseURI);
+
+    if (parsedUri != null && parsedUri.length == 2) {
+      let baseUri = parsedUri[1];
+
+      $.get(`${baseUri}/versions/versions.json`, function(data) {
+        let versionElement = $("#versions");
+
+        Object.keys(data).forEach(function(key) {
+          let value = data[key];
+
+          let item = `<dd><a href="${baseUri}/versions/${key}/html/">${value}</a></dd>`
+
+          versionElement.append(item);
+        });
+      });
+    }
+  </script>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Read the Docs</span>
+      v: master
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      
+      <dl id="versions">
+        <dt>Versions</dt>
+      </dl>
+      
+      
+    </div>
+  </div>
+<script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });

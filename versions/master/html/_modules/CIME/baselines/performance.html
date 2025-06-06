@@ -1,24 +1,24 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CIME.baselines.performance &mdash; CIME master documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=d05bb7fd" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=30d551ce"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../../../_static/pop_ver.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=30d551ce"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -35,9 +35,6 @@
           <a href="../../../index.html" class="icon icon-home">
             CIME
           </a>
-              <div class="version">
-                master
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -48,8 +45,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../what_cime/index.html">What is CIME?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/index.html">Case Control System Part 1: Basic Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/index.html#case-control-system-part-2-configuration-porting-testing-and-use-cases">Case Control System Part 2: Configuration, Porting, Testing and Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/index.html">Using the Case Control System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/index.html#configuring-the-case-control-system">Configuring the Case Control System</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../build_cpl/index.html">Building a Coupled Model with CIME</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../misc_tools/index.html">Miscellaneous Tools</a></li>
 </ul>
@@ -86,20 +83,20 @@
            <div itemprop="articleBody">
              
   <h1>Source code for CIME.baselines.performance</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">gzip</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">CIME.config</span> <span class="kn">import</span> <span class="n">Config</span>
-<span class="kn">from</span> <span class="nn">CIME.utils</span> <span class="kn">import</span> <span class="n">expect</span><span class="p">,</span> <span class="n">get_src_root</span><span class="p">,</span> <span class="n">get_current_commit</span><span class="p">,</span> <span class="n">get_timestamp</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">gzip</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">expect</span><span class="p">,</span> <span class="n">get_src_root</span><span class="p">,</span> <span class="n">get_current_commit</span><span class="p">,</span> <span class="n">get_timestamp</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="perf_compare_throughput_baseline">
 <a class="viewcode-back" href="../../../CIME_api/CIME.baselines.html#CIME.baselines.performance.perf_compare_throughput_baseline">[docs]</a>
-<span class="k">def</span> <span class="nf">perf_compare_throughput_baseline</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">baseline_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">perf_compare_throughput_baseline</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">baseline_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compares model throughput.</span>
 
@@ -151,7 +148,7 @@
 
 <div class="viewcode-block" id="perf_compare_memory_baseline">
 <a class="viewcode-back" href="../../../CIME_api/CIME.baselines.html#CIME.baselines.performance.perf_compare_memory_baseline">[docs]</a>
-<span class="k">def</span> <span class="nf">perf_compare_memory_baseline</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">baseline_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">perf_compare_memory_baseline</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">baseline_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compares model highwater memory usage.</span>
 
@@ -198,7 +195,7 @@
 
 <div class="viewcode-block" id="perf_write_baseline">
 <a class="viewcode-back" href="../../../CIME_api/CIME.baselines.html#CIME.baselines.performance.perf_write_baseline">[docs]</a>
-<span class="k">def</span> <span class="nf">perf_write_baseline</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">basegen_dir</span><span class="p">,</span> <span class="n">throughput</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">perf_write_baseline</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">basegen_dir</span><span class="p">,</span> <span class="n">throughput</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Writes the baseline performance files.</span>
 
@@ -243,7 +240,7 @@
 
 <div class="viewcode-block" id="load_coupler_customization">
 <a class="viewcode-back" href="../../../CIME_api/CIME.baselines.html#CIME.baselines.performance.load_coupler_customization">[docs]</a>
-<span class="k">def</span> <span class="nf">load_coupler_customization</span><span class="p">(</span><span class="n">case</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_coupler_customization</span><span class="p">(</span><span class="n">case</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Loads customizations from the coupler `cime_config` directory.</span>
 
@@ -267,7 +264,7 @@
 
 <div class="viewcode-block" id="perf_get_throughput">
 <a class="viewcode-back" href="../../../CIME_api/CIME.baselines.html#CIME.baselines.performance.perf_get_throughput">[docs]</a>
-<span class="k">def</span> <span class="nf">perf_get_throughput</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">perf_get_throughput</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Gets the model throughput.</span>
 
@@ -296,7 +293,7 @@
 
 <div class="viewcode-block" id="perf_get_memory">
 <a class="viewcode-back" href="../../../CIME_api/CIME.baselines.html#CIME.baselines.performance.perf_get_memory">[docs]</a>
-<span class="k">def</span> <span class="nf">perf_get_memory</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">perf_get_memory</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Gets the model memory usage.</span>
 
@@ -325,7 +322,7 @@
 
 <div class="viewcode-block" id="write_baseline_file">
 <a class="viewcode-back" href="../../../CIME_api/CIME.baselines.html#CIME.baselines.performance.write_baseline_file">[docs]</a>
-<span class="k">def</span> <span class="nf">write_baseline_file</span><span class="p">(</span><span class="n">baseline_file</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">write_baseline_file</span><span class="p">(</span><span class="n">baseline_file</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Writes value to `baseline_file`.</span>
 
@@ -343,7 +340,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_perf_get_memory</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">cpllog</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_perf_get_memory</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">cpllog</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Default function to retrieve memory usage from the coupler log.</span>
 
@@ -369,7 +366,7 @@
     <span class="n">memlist</span> <span class="o">=</span> <span class="n">perf_get_memory_list</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">cpllog</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">memlist</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Could not get default memory usage&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="kc">None</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Could not get default memory usage&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
 
     <span class="n">value</span> <span class="o">=</span> <span class="n">_format_baseline</span><span class="p">(</span><span class="n">memlist</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
 
@@ -378,7 +375,7 @@
 
 <div class="viewcode-block" id="perf_get_memory_list">
 <a class="viewcode-back" href="../../../CIME_api/CIME.baselines.html#CIME.baselines.performance.perf_get_memory_list">[docs]</a>
-<span class="k">def</span> <span class="nf">perf_get_memory_list</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">cpllog</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">perf_get_memory_list</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">cpllog</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">cpllog</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">cpllog</span> <span class="o">=</span> <span class="n">get_latest_cpl_logs</span><span class="p">(</span><span class="n">case</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -402,7 +399,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_perf_get_throughput</span><span class="p">(</span><span class="n">case</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_perf_get_throughput</span><span class="p">(</span><span class="n">case</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Default function to retrieve throughput from the coupler log.</span>
 
@@ -428,7 +425,7 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Could not parse throughput from coupler log&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">tput</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Could not get default throughput&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="kc">None</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Could not get default throughput&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
 
     <span class="n">value</span> <span class="o">=</span> <span class="n">_format_baseline</span><span class="p">(</span><span class="n">tput</span><span class="p">)</span>
 
@@ -437,13 +434,13 @@
 
 <div class="viewcode-block" id="get_latest_cpl_logs">
 <a class="viewcode-back" href="../../../CIME_api/CIME.baselines.html#CIME.baselines.performance.get_latest_cpl_logs">[docs]</a>
-<span class="k">def</span> <span class="nf">get_latest_cpl_logs</span><span class="p">(</span><span class="n">case</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_latest_cpl_logs</span><span class="p">(</span><span class="n">case</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    find and return the latest cpl log file in the run directory</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">coupler_log_path</span> <span class="o">=</span> <span class="n">case</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;RUNDIR&quot;</span><span class="p">)</span>
 
-    <span class="n">cpllog_name</span> <span class="o">=</span> <span class="s2">&quot;drv&quot;</span> <span class="k">if</span> <span class="n">case</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;COMP_INTERFACE&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;nuopc&quot;</span> <span class="k">else</span> <span class="s2">&quot;cpl&quot;</span>
+    <span class="n">cpllog_name</span> <span class="o">=</span> <span class="s2">&quot;med&quot;</span> <span class="k">if</span> <span class="n">case</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;COMP_INTERFACE&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;nuopc&quot;</span> <span class="k">else</span> <span class="s2">&quot;cpl&quot;</span>
 
     <span class="n">cpllogs</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">coupler_log_path</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">*.log.*&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cpllog_name</span><span class="p">)))</span>
 
@@ -469,7 +466,7 @@
 
 <div class="viewcode-block" id="get_cpl_mem_usage">
 <a class="viewcode-back" href="../../../CIME_api/CIME.baselines.html#CIME.baselines.performance.get_cpl_mem_usage">[docs]</a>
-<span class="k">def</span> <span class="nf">get_cpl_mem_usage</span><span class="p">(</span><span class="n">cpllog</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_cpl_mem_usage</span><span class="p">(</span><span class="n">cpllog</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read memory usage from coupler log.</span>
 
@@ -510,7 +507,7 @@
 
 <div class="viewcode-block" id="get_cpl_throughput">
 <a class="viewcode-back" href="../../../CIME_api/CIME.baselines.html#CIME.baselines.performance.get_cpl_throughput">[docs]</a>
-<span class="k">def</span> <span class="nf">get_cpl_throughput</span><span class="p">(</span><span class="n">cpllog</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_cpl_throughput</span><span class="p">(</span><span class="n">cpllog</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reads throuhgput from coupler log.</span>
 
@@ -538,7 +535,7 @@
 
 <div class="viewcode-block" id="read_baseline_file">
 <a class="viewcode-back" href="../../../CIME_api/CIME.baselines.html#CIME.baselines.performance.read_baseline_file">[docs]</a>
-<span class="k">def</span> <span class="nf">read_baseline_file</span><span class="p">(</span><span class="n">baseline_file</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_baseline_file</span><span class="p">(</span><span class="n">baseline_file</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reads value from `baseline_file`.</span>
 
@@ -554,6 +551,8 @@
 <span class="sd">    str</span>
 <span class="sd">        Value stored in baseline file without comments.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">baseline_file</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">NO file </span><span class="si">{}</span><span class="s2"> found&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">baseline_file</span><span class="p">)</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">baseline_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
         <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fd</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">x</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">x</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>
 
@@ -561,7 +560,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_perf_compare_throughput_baseline</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">baseline</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_perf_compare_throughput_baseline</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">baseline</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Default throughput baseline comparison.</span>
 
@@ -619,7 +618,7 @@
     <span class="k">return</span> <span class="n">below_tolerance</span><span class="p">,</span> <span class="n">comment</span>
 
 
-<span class="k">def</span> <span class="nf">_perf_compare_memory_baseline</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">baseline</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_perf_compare_memory_baseline</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">baseline</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Default memory usage baseline comparison.</span>
 
@@ -682,7 +681,7 @@
     <span class="k">return</span> <span class="n">below_tolerance</span><span class="p">,</span> <span class="n">comment</span>
 
 
-<span class="k">def</span> <span class="nf">_format_baseline</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_format_baseline</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Encodes value with default baseline format.</span>
 
@@ -706,7 +705,7 @@
     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;sha:</span><span class="si">{</span><span class="n">commit_hash</span><span class="si">}</span><span class="s2"> date:</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
 
 
-<span class="k">def</span> <span class="nf">_parse_baseline</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_baseline</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parses default baseline format.</span>
 
@@ -757,7 +756,44 @@
       </div>
     </section>
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
+    let baseUriRegex = /(.*\/cime)\/.*/g;
+    let parsedUri = baseUriRegex.exec(document.baseURI);
+
+    if (parsedUri != null && parsedUri.length == 2) {
+      let baseUri = parsedUri[1];
+
+      $.get(`${baseUri}/versions/versions.json`, function(data) {
+        let versionElement = $("#versions");
+
+        Object.keys(data).forEach(function(key) {
+          let value = data[key];
+
+          let item = `<dd><a href="${baseUri}/versions/${key}/html/">${value}</a></dd>`
+
+          versionElement.append(item);
+        });
+      });
+    }
+  </script>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Read the Docs</span>
+      v: master
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      
+      <dl id="versions">
+        <dt>Versions</dt>
+      </dl>
+      
+      
+    </div>
+  </div>
+<script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });

@@ -1,24 +1,24 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CIME.case.case_setup &mdash; CIME master documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=d05bb7fd" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=30d551ce"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../../../_static/pop_ver.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=30d551ce"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -35,9 +35,6 @@
           <a href="../../../index.html" class="icon icon-home">
             CIME
           </a>
-              <div class="version">
-                master
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -48,8 +45,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../what_cime/index.html">What is CIME?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/index.html">Case Control System Part 1: Basic Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/index.html#case-control-system-part-2-configuration-porting-testing-and-use-cases">Case Control System Part 2: Configuration, Porting, Testing and Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/index.html">Using the Case Control System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/index.html#configuring-the-case-control-system">Configuring the Case Control System</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../build_cpl/index.html">Building a Coupled Model with CIME</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../misc_tools/index.html">Miscellaneous Tools</a></li>
 </ul>
@@ -91,34 +88,36 @@
 <span class="sd">case_setup is a member of class Case from file case.py</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="kn">from</span> <span class="nn">CIME.XML.standard_module_setup</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">CIME.config</span> <span class="kn">import</span> <span class="n">Config</span>
-<span class="kn">from</span> <span class="nn">CIME.XML.machines</span> <span class="kn">import</span> <span class="n">Machines</span>
-<span class="kn">from</span> <span class="nn">CIME.BuildTools.configure</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.XML.standard_module_setup</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.XML.machines</span><span class="w"> </span><span class="kn">import</span> <span class="n">Machines</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.BuildTools.configure</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">generate_env_mach_specific</span><span class="p">,</span>
     <span class="n">copy_depends_files</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">CIME.utils</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">run_and_log_case_status</span><span class="p">,</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">get_batch_script_for_job</span><span class="p">,</span>
     <span class="n">safe_copy</span><span class="p">,</span>
     <span class="n">file_contains_python_function</span><span class="p">,</span>
     <span class="n">import_from_file</span><span class="p">,</span>
     <span class="n">copy_local_macros_to_dir</span><span class="p">,</span>
+    <span class="n">batch_jobid</span><span class="p">,</span>
+    <span class="n">run_cmd_no_fail</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">CIME.utils</span> <span class="kn">import</span> <span class="n">batch_jobid</span>
-<span class="kn">from</span> <span class="nn">CIME.test_status</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">CIME.locked_files</span> <span class="kn">import</span> <span class="n">unlock_file</span><span class="p">,</span> <span class="n">lock_file</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.status</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_and_log_case_status</span><span class="p">,</span> <span class="n">append_case_status</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.test_status</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.locked_files</span><span class="w"> </span><span class="kn">import</span> <span class="n">unlock_file</span><span class="p">,</span> <span class="n">lock_file</span><span class="p">,</span> <span class="n">check_lockedfiles</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.gitinterface</span><span class="w"> </span><span class="kn">import</span> <span class="n">GitInterface</span>
 
-<span class="kn">import</span> <span class="nn">errno</span><span class="o">,</span> <span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">errno</span><span class="o">,</span><span class="w"> </span><span class="nn">shutil</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <span class="c1">###############################################################################</span>
-<span class="k">def</span> <span class="nf">_build_usernl_files</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">comp</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_build_usernl_files</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">comp</span><span class="p">):</span>
     <span class="c1">###############################################################################</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create user_nl_xxx files, expects cwd is caseroot</span>
@@ -192,7 +191,7 @@
 
 
 <span class="c1">###############################################################################</span>
-<span class="k">def</span> <span class="nf">_get_user_nl_list</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">default_nlfile</span><span class="p">,</span> <span class="n">model_dir</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_user_nl_list</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">default_nlfile</span><span class="p">,</span> <span class="n">model_dir</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a list of user_nl files needed by this component</span>
 
 <span class="sd">    Typically, each component has a single user_nl file: user_nl_comp. However, some</span>
@@ -224,7 +223,7 @@
 
 
 <span class="c1">###############################################################################</span>
-<span class="k">def</span> <span class="nf">_create_macros_cmake</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_create_macros_cmake</span><span class="p">(</span>
     <span class="n">caseroot</span><span class="p">,</span> <span class="n">cmake_macros_dir</span><span class="p">,</span> <span class="n">mach_obj</span><span class="p">,</span> <span class="n">compiler</span><span class="p">,</span> <span class="n">case_cmake_path</span>
 <span class="p">):</span>
     <span class="c1">###############################################################################</span>
@@ -248,15 +247,19 @@
     <span class="p">]</span>
     <span class="k">for</span> <span class="n">macro</span> <span class="ow">in</span> <span class="n">macros</span><span class="p">:</span>
         <span class="n">repo_macro</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cmake_macros_dir</span><span class="p">,</span> <span class="n">macro</span><span class="p">)</span>
+        <span class="n">mach_repo_macro</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cmake_macros_dir</span><span class="p">,</span> <span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="n">mach</span><span class="p">,</span> <span class="n">macro</span><span class="p">)</span>
         <span class="n">case_macro</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">case_cmake_path</span><span class="p">,</span> <span class="n">macro</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">case_macro</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">repo_macro</span><span class="p">):</span>
-            <span class="n">safe_copy</span><span class="p">(</span><span class="n">repo_macro</span><span class="p">,</span> <span class="n">case_cmake_path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">case_macro</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mach_repo_macro</span><span class="p">):</span>
+                <span class="n">safe_copy</span><span class="p">(</span><span class="n">mach_repo_macro</span><span class="p">,</span> <span class="n">case_cmake_path</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">repo_macro</span><span class="p">):</span>
+                <span class="n">safe_copy</span><span class="p">(</span><span class="n">repo_macro</span><span class="p">,</span> <span class="n">case_cmake_path</span><span class="p">)</span>
 
     <span class="n">copy_depends_files</span><span class="p">(</span><span class="n">mach</span><span class="p">,</span> <span class="n">mach_obj</span><span class="o">.</span><span class="n">machines_dir</span><span class="p">,</span> <span class="n">caseroot</span><span class="p">,</span> <span class="n">compiler</span><span class="p">)</span>
 
 
 <span class="c1">###############################################################################</span>
-<span class="k">def</span> <span class="nf">_create_macros</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_create_macros</span><span class="p">(</span>
     <span class="n">case</span><span class="p">,</span> <span class="n">mach_obj</span><span class="p">,</span> <span class="n">caseroot</span><span class="p">,</span> <span class="n">compiler</span><span class="p">,</span> <span class="n">mpilib</span><span class="p">,</span> <span class="n">debug</span><span class="p">,</span> <span class="n">comp_interface</span><span class="p">,</span> <span class="n">sysos</span>
 <span class="p">):</span>
     <span class="c1">###############################################################################</span>
@@ -294,7 +297,7 @@
 
 
 <span class="c1">###############################################################################</span>
-<span class="k">def</span> <span class="nf">_case_setup_impl</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_case_setup_impl</span><span class="p">(</span>
     <span class="n">case</span><span class="p">,</span> <span class="n">caseroot</span><span class="p">,</span> <span class="n">clean</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">test_mode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">keep</span><span class="o">=</span><span class="kc">None</span>
 <span class="p">):</span>
     <span class="c1">###############################################################################</span>
@@ -433,23 +436,25 @@
 
             <span class="k">case</span><span class="o">.</span><span class="n">initialize_derived_attributes</span><span class="p">()</span>
 
-            <span class="k">case</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="s2">&quot;SMP_PRESENT&quot;</span><span class="p">,</span> <span class="n">case</span><span class="o">.</span><span class="n">get_build_threaded</span><span class="p">())</span>
+            <span class="k">case</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="s2">&quot;BUILD_THREADED&quot;</span><span class="p">,</span> <span class="n">case</span><span class="o">.</span><span class="n">get_build_threaded</span><span class="p">())</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">case</span><span class="o">.</span><span class="n">check_pelayouts_require_rebuild</span><span class="p">(</span><span class="n">models</span><span class="p">)</span>
+            <span class="n">caseroot</span> <span class="o">=</span> <span class="n">case</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;CASEROOT&quot;</span><span class="p">)</span>
 
-            <span class="n">unlock_file</span><span class="p">(</span><span class="s2">&quot;env_build.xml&quot;</span><span class="p">)</span>
-            <span class="n">unlock_file</span><span class="p">(</span><span class="s2">&quot;env_batch.xml&quot;</span><span class="p">)</span>
+            <span class="n">unlock_file</span><span class="p">(</span><span class="s2">&quot;env_build.xml&quot;</span><span class="p">,</span> <span class="n">caseroot</span><span class="p">)</span>
+
+            <span class="n">unlock_file</span><span class="p">(</span><span class="s2">&quot;env_batch.xml&quot;</span><span class="p">,</span> <span class="n">caseroot</span><span class="p">)</span>
 
             <span class="k">case</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
-            <span class="k">case</span><span class="o">.</span><span class="n">check_lockedfiles</span><span class="p">()</span>
+
+            <span class="n">check_lockedfiles</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;env_build&quot;</span><span class="p">,</span> <span class="s2">&quot;env_mach_pes&quot;</span><span class="p">])</span>
 
             <span class="k">case</span><span class="o">.</span><span class="n">initialize_derived_attributes</span><span class="p">()</span>
 
             <span class="n">cost_per_node</span> <span class="o">=</span> <span class="n">case</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;COSTPES_PER_NODE&quot;</span><span class="p">)</span>
             <span class="k">case</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="s2">&quot;COST_PES&quot;</span><span class="p">,</span> <span class="n">case</span><span class="o">.</span><span class="n">num_nodes</span> <span class="o">*</span> <span class="n">cost_per_node</span><span class="p">)</span>
             <span class="n">threaded</span> <span class="o">=</span> <span class="n">case</span><span class="o">.</span><span class="n">get_build_threaded</span><span class="p">()</span>
-            <span class="k">case</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="s2">&quot;SMP_PRESENT&quot;</span><span class="p">,</span> <span class="n">threaded</span><span class="p">)</span>
+            <span class="k">case</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="s2">&quot;BUILD_THREADED&quot;</span><span class="p">,</span> <span class="n">threaded</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">threaded</span> <span class="ow">and</span> <span class="n">case</span><span class="o">.</span><span class="n">total_tasks</span> <span class="o">*</span> <span class="n">case</span><span class="o">.</span><span class="n">thread_count</span> <span class="o">&gt;</span> <span class="n">cost_per_node</span><span class="p">:</span>
                 <span class="n">smt_factor</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
                     <span class="mf">1.0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">case</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;MAX_TASKS_PER_NODE&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="n">cost_per_node</span><span class="p">)</span>
@@ -467,6 +472,48 @@
                     <span class="s2">&quot;TOTALPES&quot;</span><span class="p">,</span>
                     <span class="p">(</span><span class="n">case</span><span class="o">.</span><span class="n">total_tasks</span> <span class="o">-</span> <span class="n">case</span><span class="o">.</span><span class="n">iotasks</span><span class="p">)</span> <span class="o">*</span> <span class="n">case</span><span class="o">.</span><span class="n">thread_count</span>
                     <span class="o">+</span> <span class="n">case</span><span class="o">.</span><span class="n">iotasks</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="c1"># ----------------------------------------------------------------------------------------------------------</span>
+            <span class="c1"># Sanity check for a GPU run:</span>
+            <span class="c1">#        1. GPU_TYPE and GPU_OFFLOAD must both be defined to use GPUs</span>
+            <span class="c1">#        2. If the NGPUS_PER_NODE XML variable in the env_mach_pes.xml file is larger than</span>
+            <span class="c1">#           the value of MAX_GPUS_PER_NODE, set it to MAX_GPUS_PER_NODE automatically.</span>
+            <span class="c1">#        3. If the NGPUS_PER_NODE XML variable is equal to 0, it will be updated to 1 automatically.</span>
+            <span class="c1"># ----------------------------------------------------------------------------------------------------------</span>
+            <span class="n">max_gpus_per_node</span> <span class="o">=</span> <span class="n">case</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;MAX_GPUS_PER_NODE&quot;</span><span class="p">)</span>
+            <span class="n">gpu_type</span> <span class="o">=</span> <span class="n">case</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;GPU_TYPE&quot;</span><span class="p">)</span>
+            <span class="n">openacc_gpu_offload</span> <span class="o">=</span> <span class="n">case</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;OPENACC_GPU_OFFLOAD&quot;</span><span class="p">)</span>
+            <span class="n">openmp_gpu_offload</span> <span class="o">=</span> <span class="n">case</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;OPENMP_GPU_OFFLOAD&quot;</span><span class="p">)</span>
+            <span class="n">kokkos_gpu_offload</span> <span class="o">=</span> <span class="n">case</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;KOKKOS_GPU_OFFLOAD&quot;</span><span class="p">)</span>
+            <span class="n">gpu_offload</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">openacc_gpu_offload</span> <span class="ow">or</span> <span class="n">openmp_gpu_offload</span> <span class="ow">or</span> <span class="n">kokkos_gpu_offload</span>
+            <span class="p">)</span>
+            <span class="n">ngpus_per_node</span> <span class="o">=</span> <span class="n">case</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;NGPUS_PER_NODE&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">gpu_type</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">gpu_type</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;none&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">max_gpus_per_node</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;MAX_GPUS_PER_NODE must be larger than 0 for machine=</span><span class="si">{</span><span class="n">mach</span><span class="si">}</span><span class="s2"> and compiler=</span><span class="si">{</span><span class="n">compiler</span><span class="si">}</span><span class="s2"> in order to configure a GPU run&quot;</span>
+                    <span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">gpu_offload</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                        <span class="s2">&quot;GPU_TYPE is defined but none of the GPU OFFLOAD options are enabled&quot;</span>
+                    <span class="p">)</span>
+                <span class="k">case</span><span class="o">.</span><span class="n">gpu_enabled</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">if</span> <span class="n">ngpus_per_node</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">case</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span>
+                        <span class="s2">&quot;NGPUS_PER_NODE&quot;</span><span class="p">,</span>
+                        <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">ngpus_per_node</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">ngpus_per_node</span> <span class="o">&lt;=</span> <span class="n">max_gpus_per_node</span>
+                        <span class="k">else</span> <span class="n">max_gpus_per_node</span><span class="p">,</span>
+                    <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">gpu_offload</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="s2">&quot;GPU_TYPE is not defined but at least one GPU OFFLOAD option is enabled&quot;</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">ngpus_per_node</span> <span class="ow">and</span> <span class="n">ngpus_per_node</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;ngpus_per_node is expected to be 0 for a pure CPU run ; </span><span class="si">{</span><span class="n">ngpus_per_node</span><span class="si">}</span><span class="s2"> is provided instead ;&quot;</span>
                 <span class="p">)</span>
 
             <span class="c1"># May need to select new batch settings if pelayout changed (e.g. problem is now too big for prev-selected queue)</span>
@@ -492,9 +539,14 @@
             <span class="c1"># Make a copy of env_mach_pes.xml in order to be able</span>
             <span class="c1"># to check that it does not change once case.setup is invoked</span>
             <span class="k">case</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;at copy TOTALPES = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">case</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;TOTALPES&quot;</span><span class="p">)))</span>
-            <span class="n">lock_file</span><span class="p">(</span><span class="s2">&quot;env_mach_pes.xml&quot;</span><span class="p">)</span>
-            <span class="n">lock_file</span><span class="p">(</span><span class="s2">&quot;env_batch.xml&quot;</span><span class="p">)</span>
+
+            <span class="n">caseroot</span> <span class="o">=</span> <span class="n">case</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;CASEROOT&quot;</span><span class="p">)</span>
+
+            <span class="n">lock_file</span><span class="p">(</span><span class="s2">&quot;env_mach_pes.xml&quot;</span><span class="p">,</span> <span class="n">caseroot</span><span class="p">)</span>
+
+            <span class="n">lock_file</span><span class="p">(</span><span class="s2">&quot;env_batch.xml&quot;</span><span class="p">,</span> <span class="n">caseroot</span><span class="p">)</span>
 
         <span class="c1"># Create user_nl files for the required number of instances</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;user_nl_cpl&quot;</span><span class="p">):</span>
@@ -512,12 +564,15 @@
                 <span class="p">)</span>
             <span class="k">if</span> <span class="n">comp</span> <span class="o">==</span> <span class="s2">&quot;cam&quot;</span><span class="p">:</span>
                 <span class="n">camroot</span> <span class="o">=</span> <span class="n">case</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;COMP_ROOT_DIR_ATM&quot;</span><span class="p">)</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Running cam.case_setup.py&quot;</span><span class="p">)</span>
-                <span class="n">run_cmd_no_fail</span><span class="p">(</span>
-                    <span class="s2">&quot;python </span><span class="si">{cam}</span><span class="s2">/cime_config/cam.case_setup.py </span><span class="si">{cam}</span><span class="s2"> </span><span class="si">{case}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="n">cam</span><span class="o">=</span><span class="n">camroot</span><span class="p">,</span> <span class="n">case</span><span class="o">=</span><span class="n">caseroot</span>
+                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">camroot</span><span class="p">,</span> <span class="s2">&quot;cime_config/cam.case_setup.py&quot;</span><span class="p">)</span>
+                <span class="p">):</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Running cam.case_setup.py&quot;</span><span class="p">)</span>
+                    <span class="n">run_cmd_no_fail</span><span class="p">(</span>
+                        <span class="s2">&quot;python </span><span class="si">{cam}</span><span class="s2">/cime_config/cam.case_setup.py </span><span class="si">{cam}</span><span class="s2"> </span><span class="si">{case}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="n">cam</span><span class="o">=</span><span class="n">camroot</span><span class="p">,</span> <span class="n">case</span><span class="o">=</span><span class="n">caseroot</span>
+                        <span class="p">)</span>
                     <span class="p">)</span>
-                <span class="p">)</span>
 
         <span class="n">_build_usernl_files</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="s2">&quot;drv&quot;</span><span class="p">,</span> <span class="s2">&quot;cpl&quot;</span><span class="p">)</span>
 
@@ -553,7 +608,9 @@
 <span class="c1">###############################################################################</span>
 <div class="viewcode-block" id="case_setup">
 <a class="viewcode-back" href="../../../CIME_api/CIME.case.html#CIME.case.case.case_setup">[docs]</a>
-<span class="k">def</span> <span class="nf">case_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clean</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">test_mode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">keep</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">case_setup</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="n">clean</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">test_mode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">keep</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">disable_git</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">):</span>
     <span class="c1">###############################################################################</span>
     <span class="n">caseroot</span><span class="p">,</span> <span class="n">casebaseid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;CASEROOT&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;CASEBASEID&quot;</span><span class="p">)</span>
     <span class="n">phase</span> <span class="o">=</span> <span class="s2">&quot;setup.clean&quot;</span> <span class="k">if</span> <span class="n">clean</span> <span class="k">else</span> <span class="s2">&quot;case.setup&quot;</span>
@@ -596,8 +653,36 @@
             <span class="n">custom_success_msg_functor</span><span class="o">=</span><span class="n">msg_func</span><span class="p">,</span>
             <span class="n">caseroot</span><span class="o">=</span><span class="n">caseroot</span><span class="p">,</span>
             <span class="n">is_batch</span><span class="o">=</span><span class="n">is_batch</span><span class="p">,</span>
-        <span class="p">)</span></div>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">disable_git</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">reset</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_create_case_repo</span><span class="p">(</span><span class="n">caseroot</span><span class="p">)</span></div>
 
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_create_case_repo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">caseroot</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_gitinterface</span> <span class="o">=</span> <span class="n">GitInterface</span><span class="p">(</span><span class="n">caseroot</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">branch</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;CASE&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gitinterface</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">caseroot</span><span class="p">,</span> <span class="s2">&quot;.gitignore&quot;</span><span class="p">)):</span>
+        <span class="n">safe_copy</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;CIMEROOT&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;CIME&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;data&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;templates&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;gitignore.template&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">caseroot</span><span class="p">,</span> <span class="s2">&quot;.gitignore&quot;</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">append_case_status</span><span class="p">(</span>
+            <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;local git repository created&quot;</span><span class="p">,</span> <span class="n">gitinterface</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_gitinterface</span>
+        <span class="p">)</span>
+        <span class="c1"># add all files in caseroot to local repository</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gitinterface</span><span class="o">.</span><span class="n">_git_command</span><span class="p">(</span><span class="s2">&quot;add&quot;</span><span class="p">,</span> <span class="s2">&quot;*&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gitinterface</span><span class="p">:</span>
+        <span class="n">append_case_status</span><span class="p">(</span>
+            <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Local git version too old for cime git interface, version 2.28 or newer required.&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
 </pre></div>
 
            </div>
@@ -623,7 +708,44 @@
       </div>
     </section>
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
+    let baseUriRegex = /(.*\/cime)\/.*/g;
+    let parsedUri = baseUriRegex.exec(document.baseURI);
+
+    if (parsedUri != null && parsedUri.length == 2) {
+      let baseUri = parsedUri[1];
+
+      $.get(`${baseUri}/versions/versions.json`, function(data) {
+        let versionElement = $("#versions");
+
+        Object.keys(data).forEach(function(key) {
+          let value = data[key];
+
+          let item = `<dd><a href="${baseUri}/versions/${key}/html/">${value}</a></dd>`
+
+          versionElement.append(item);
+        });
+      });
+    }
+  </script>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Read the Docs</span>
+      v: master
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      
+      <dl id="versions">
+        <dt>Versions</dt>
+      </dl>
+      
+      
+    </div>
+  </div>
+<script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });

@@ -1,24 +1,24 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CIME.simple_compare &mdash; CIME master documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
-      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=d05bb7fd" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=30d551ce"></script>
-        <script src="../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../../_static/pop_ver.js"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=30d551ce"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -35,9 +35,6 @@
           <a href="../../index.html" class="icon icon-home">
             CIME
           </a>
-              <div class="version">
-                master
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -48,8 +45,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../what_cime/index.html">What is CIME?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../users_guide/index.html">Case Control System Part 1: Basic Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../users_guide/index.html#case-control-system-part-2-configuration-porting-testing-and-use-cases">Case Control System Part 2: Configuration, Porting, Testing and Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/index.html">Using the Case Control System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/index.html#configuring-the-case-control-system">Configuring the Case Control System</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../build_cpl/index.html">Building a Coupled Model with CIME</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../misc_tools/index.html">Miscellaneous Tools</a></li>
 </ul>
@@ -86,12 +83,12 @@
            <div itemprop="articleBody">
              
   <h1>Source code for CIME.simple_compare</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">re</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">re</span>
 
-<span class="kn">from</span> <span class="nn">CIME.utils</span> <span class="kn">import</span> <span class="n">expect</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">CIME.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">expect</span>
 
 <span class="c1">###############################################################################</span>
-<span class="k">def</span> <span class="nf">_normalize_string_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">case</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_normalize_string_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">case</span><span class="p">):</span>
     <span class="c1">###############################################################################</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Some of the strings are inherently prone to diffs, like file</span>
@@ -117,7 +114,7 @@
 
 
 <span class="c1">###############################################################################</span>
-<span class="k">def</span> <span class="nf">_skip_comments_and_whitespace</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_skip_comments_and_whitespace</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
     <span class="c1">###############################################################################</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Starting at idx, return next valid idx of lines that contains real data</span>
@@ -139,7 +136,7 @@
 
 
 <span class="c1">###############################################################################</span>
-<span class="k">def</span> <span class="nf">_compare_data</span><span class="p">(</span><span class="n">gold_lines</span><span class="p">,</span> <span class="n">comp_lines</span><span class="p">,</span> <span class="n">case</span><span class="p">,</span> <span class="n">offset_method</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_compare_data</span><span class="p">(</span><span class="n">gold_lines</span><span class="p">,</span> <span class="n">comp_lines</span><span class="p">,</span> <span class="n">case</span><span class="p">,</span> <span class="n">offset_method</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="c1">###############################################################################</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    &gt;&gt;&gt; teststr = &#39;&#39;&#39;</span>
@@ -206,7 +203,6 @@
 
         <span class="n">norm_gold_value</span> <span class="o">=</span> <span class="n">_normalize_string_value</span><span class="p">(</span><span class="n">gold_value</span><span class="p">,</span> <span class="n">case</span><span class="p">)</span>
         <span class="n">norm_comp_value</span> <span class="o">=</span> <span class="n">_normalize_string_value</span><span class="p">(</span><span class="n">comp_value</span><span class="p">,</span> <span class="n">case</span><span class="p">)</span>
-
         <span class="k">if</span> <span class="n">norm_gold_value</span> <span class="o">!=</span> <span class="n">norm_comp_value</span><span class="p">:</span>
             <span class="n">comments</span> <span class="o">+=</span> <span class="s2">&quot;Inequivalent lines </span><span class="si">{}</span><span class="s2"> != </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gold_value</span><span class="p">,</span> <span class="n">comp_value</span><span class="p">)</span>
             <span class="n">comments</span> <span class="o">+=</span> <span class="s2">&quot;  NORMALIZED: </span><span class="si">{}</span><span class="s2"> != </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -228,7 +224,7 @@
 <span class="c1">###############################################################################</span>
 <div class="viewcode-block" id="compare_files">
 <a class="viewcode-back" href="../../CIME_api/CIME.html#CIME.simple_compare.compare_files">[docs]</a>
-<span class="k">def</span> <span class="nf">compare_files</span><span class="p">(</span><span class="n">gold_file</span><span class="p">,</span> <span class="n">compare_file</span><span class="p">,</span> <span class="n">case</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compare_files</span><span class="p">(</span><span class="n">gold_file</span><span class="p">,</span> <span class="n">compare_file</span><span class="p">,</span> <span class="n">case</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="c1">###############################################################################</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns true if files are the same, comments are returned too:</span>
@@ -258,7 +254,7 @@
 <span class="c1">###############################################################################</span>
 <div class="viewcode-block" id="compare_runconfigfiles">
 <a class="viewcode-back" href="../../CIME_api/CIME.html#CIME.simple_compare.compare_runconfigfiles">[docs]</a>
-<span class="k">def</span> <span class="nf">compare_runconfigfiles</span><span class="p">(</span><span class="n">gold_file</span><span class="p">,</span> <span class="n">compare_file</span><span class="p">,</span> <span class="n">case</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compare_runconfigfiles</span><span class="p">(</span><span class="n">gold_file</span><span class="p">,</span> <span class="n">compare_file</span><span class="p">,</span> <span class="n">case</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="c1">###############################################################################</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns true if files are the same, comments are returned too:</span>
@@ -270,7 +266,6 @@
     <span class="c1"># create dictionary&#39;s of the runconfig files and compare them</span>
     <span class="n">gold_dict</span> <span class="o">=</span> <span class="n">_parse_runconfig</span><span class="p">(</span><span class="n">gold_file</span><span class="p">)</span>
     <span class="n">compare_dict</span> <span class="o">=</span> <span class="n">_parse_runconfig</span><span class="p">(</span><span class="n">compare_file</span><span class="p">)</span>
-
     <span class="n">comments</span> <span class="o">=</span> <span class="n">findDiff</span><span class="p">(</span><span class="n">gold_dict</span><span class="p">,</span> <span class="n">compare_dict</span><span class="p">,</span> <span class="n">case</span><span class="o">=</span><span class="n">case</span><span class="p">)</span>
     <span class="n">comments</span> <span class="o">=</span> <span class="n">comments</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; d1&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">gold_file</span><span class="p">)</span>
     <span class="n">comments</span> <span class="o">=</span> <span class="n">comments</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; d2&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">compare_file</span><span class="p">)</span>
@@ -284,7 +279,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_parse_runconfig</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_runconfig</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
     <span class="n">runconfig</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">inrunseq</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">insubsection</span> <span class="o">=</span> <span class="kc">None</span>
@@ -317,7 +312,7 @@
 
 <div class="viewcode-block" id="findDiff">
 <a class="viewcode-back" href="../../CIME_api/CIME.html#CIME.simple_compare.findDiff">[docs]</a>
-<span class="k">def</span> <span class="nf">findDiff</span><span class="p">(</span><span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">case</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">findDiff</span><span class="p">(</span><span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">case</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">comment</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">d1</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">d2</span><span class="p">:</span>
@@ -336,6 +331,8 @@
                 <span class="k">elif</span> <span class="s2">&quot;username&quot;</span> <span class="ow">in</span> <span class="n">k</span><span class="p">:</span>
                     <span class="k">pass</span>
                 <span class="k">elif</span> <span class="s2">&quot;logfile&quot;</span> <span class="ow">in</span> <span class="n">k</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                <span class="k">elif</span> <span class="s2">&quot;model_version&quot;</span> <span class="ow">in</span> <span class="n">k</span><span class="p">:</span>
                     <span class="k">pass</span>
                 <span class="k">elif</span> <span class="n">d1</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">!=</span> <span class="n">d2</span><span class="p">[</span><span class="n">k</span><span class="p">]:</span>
                     <span class="n">comment</span> <span class="o">+=</span> <span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;:</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -368,7 +365,44 @@
       </div>
     </section>
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
+    let baseUriRegex = /(.*\/cime)\/.*/g;
+    let parsedUri = baseUriRegex.exec(document.baseURI);
+
+    if (parsedUri != null && parsedUri.length == 2) {
+      let baseUri = parsedUri[1];
+
+      $.get(`${baseUri}/versions/versions.json`, function(data) {
+        let versionElement = $("#versions");
+
+        Object.keys(data).forEach(function(key) {
+          let value = data[key];
+
+          let item = `<dd><a href="${baseUri}/versions/${key}/html/">${value}</a></dd>`
+
+          versionElement.append(item);
+        });
+      });
+    }
+  </script>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Read the Docs</span>
+      v: master
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      
+      <dl id="versions">
+        <dt>Versions</dt>
+      </dl>
+      
+      
+    </div>
+  </div>
+<script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });

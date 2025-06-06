@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../">
 <head>
@@ -5,21 +7,19 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CIME.Servers package &mdash; CIME master documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
-      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=d05bb7fd" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=30d551ce"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../_static/pop_ver.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=30d551ce"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -38,9 +38,6 @@
           <a href="../index.html" class="icon icon-home">
             CIME
           </a>
-              <div class="version">
-                master
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -51,8 +48,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../what_cime/index.html">What is CIME?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../users_guide/index.html">Case Control System Part 1: Basic Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../users_guide/index.html#case-control-system-part-2-configuration-porting-testing-and-use-cases">Case Control System Part 2: Configuration, Porting, Testing and Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/index.html">Using the Case Control System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/index.html#configuring-the-case-control-system">Configuring the Case Control System</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../build_cpl/index.html">Building a Coupled Model with CIME</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../misc_tools/index.html">Miscellaneous Tools</a></li>
 </ul>
@@ -92,6 +89,7 @@
 <li class="toctree-l3"><a class="reference internal" href="CIME.html#module-CIME.expected_fails">CIME.expected_fails module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CIME.html#module-CIME.get_tests">CIME.get_tests module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CIME.html#module-CIME.get_timing">CIME.get_timing module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CIME.html#module-CIME.gitinterface">CIME.gitinterface module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CIME.html#module-CIME.hist_utils">CIME.hist_utils module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CIME.html#module-CIME.jenkins_generic_job">CIME.jenkins_generic_job module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CIME.html#module-CIME.locked_files">CIME.locked_files module</a></li>
@@ -99,6 +97,7 @@
 <li class="toctree-l3"><a class="reference internal" href="CIME.html#module-CIME.nmlgen">CIME.nmlgen module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CIME.html#module-CIME.provenance">CIME.provenance module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CIME.html#module-CIME.simple_compare">CIME.simple_compare module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CIME.html#module-CIME.status">CIME.status module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CIME.html#module-CIME.test_scheduler">CIME.test_scheduler module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CIME.html#module-CIME.test_status">CIME.test_status module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CIME.html#module-CIME.test_utils">CIME.test_utils module</a></li>
@@ -149,7 +148,7 @@
 <p>FTP Server class.  Interact with a server using FTP protocol</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="CIME.Servers.ftp.FTP">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CIME.Servers.ftp.</span></span><span class="sig-name descname"><span class="pre">FTP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passwd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">server</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/Servers/ftp.html#FTP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.Servers.ftp.FTP" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CIME.Servers.ftp.</span></span><span class="sig-name descname"><span class="pre">FTP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passwd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">server</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/Servers/ftp.html#FTP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.Servers.ftp.FTP" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#CIME.Servers.generic_server.GenericServer" title="CIME.Servers.generic_server.GenericServer"><code class="xref py py-class docutils literal notranslate"><span class="pre">GenericServer</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="CIME.Servers.ftp.FTP.fileexists">
@@ -159,7 +158,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="CIME.Servers.ftp.FTP.ftp_login">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ftp_login</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passwd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/Servers/ftp.html#FTP.ftp_login"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.Servers.ftp.FTP.ftp_login" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ftp_login</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passwd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/Servers/ftp.html#FTP.ftp_login"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.Servers.ftp.FTP.ftp_login" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -184,7 +183,7 @@ to make sure that specific server classes maintain a consistant argument list an
 so that they are interchangable objects</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="CIME.Servers.generic_server.GenericServer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CIME.Servers.generic_server.</span></span><span class="sig-name descname"><span class="pre">GenericServer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host='</span> <span class="pre">'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user='</span> <span class="pre">'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passwd='</span> <span class="pre">'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acct='</span> <span class="pre">'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout=&lt;object</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/Servers/generic_server.html#GenericServer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.Servers.generic_server.GenericServer" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CIME.Servers.generic_server.</span></span><span class="sig-name descname"><span class="pre">GenericServer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host='</span> <span class="pre">'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user='</span> <span class="pre">'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passwd='</span> <span class="pre">'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acct='</span> <span class="pre">'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout=&lt;object</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/Servers/generic_server.html#GenericServer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.Servers.generic_server.GenericServer" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="CIME.Servers.generic_server.GenericServer.fileexists">
@@ -207,7 +206,7 @@ fail if full_path already exists on client, return True if successful</p>
 <p>GridFTP Server class.  Interact with a server using GridFTP protocol</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="CIME.Servers.gftp.GridFTP">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CIME.Servers.gftp.</span></span><span class="sig-name descname"><span class="pre">GridFTP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passwd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/Servers/gftp.html#GridFTP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.Servers.gftp.GridFTP" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CIME.Servers.gftp.</span></span><span class="sig-name descname"><span class="pre">GridFTP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passwd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/Servers/gftp.html#GridFTP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.Servers.gftp.GridFTP" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#CIME.Servers.generic_server.GenericServer" title="CIME.Servers.generic_server.GenericServer"><code class="xref py py-class docutils literal notranslate"><span class="pre">GenericServer</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="CIME.Servers.gftp.GridFTP.fileexists">
@@ -235,7 +234,7 @@ fail if full_path already exists on client, return True if successful</p>
 <p>SVN Server class.  Interact with a server using SVN protocol</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="CIME.Servers.svn.SVN">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CIME.Servers.svn.</span></span><span class="sig-name descname"><span class="pre">SVN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passwd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/Servers/svn.html#SVN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.Servers.svn.SVN" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CIME.Servers.svn.</span></span><span class="sig-name descname"><span class="pre">SVN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passwd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/Servers/svn.html#SVN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.Servers.svn.SVN" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#CIME.Servers.generic_server.GenericServer" title="CIME.Servers.generic_server.GenericServer"><code class="xref py py-class docutils literal notranslate"><span class="pre">GenericServer</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="CIME.Servers.svn.SVN.fileexists">
@@ -263,7 +262,7 @@ fail if full_path already exists on client, return True if successful</p>
 <p>WGET Server class.  Interact with a server using WGET protocol</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="CIME.Servers.wget.WGET">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CIME.Servers.wget.</span></span><span class="sig-name descname"><span class="pre">WGET</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passwd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/Servers/wget.html#WGET"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.Servers.wget.WGET" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CIME.Servers.wget.</span></span><span class="sig-name descname"><span class="pre">WGET</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passwd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/Servers/wget.html#WGET"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.Servers.wget.WGET" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#CIME.Servers.generic_server.GenericServer" title="CIME.Servers.generic_server.GenericServer"><code class="xref py py-class docutils literal notranslate"><span class="pre">GenericServer</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="CIME.Servers.wget.WGET.fileexists">
@@ -285,7 +284,7 @@ fail if full_path already exists on client, return True if successful</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="CIME.Servers.wget.WGET.wget_login">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">wget_login</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passwd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/Servers/wget.html#WGET.wget_login"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.Servers.wget.WGET.wget_login" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">wget_login</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passwd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CIME/Servers/wget.html#WGET.wget_login"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CIME.Servers.wget.WGET.wget_login" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -323,7 +322,44 @@ fail if full_path already exists on client, return True if successful</p>
       </div>
     </section>
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
+    let baseUriRegex = /(.*\/cime)\/.*/g;
+    let parsedUri = baseUriRegex.exec(document.baseURI);
+
+    if (parsedUri != null && parsedUri.length == 2) {
+      let baseUri = parsedUri[1];
+
+      $.get(`${baseUri}/versions/versions.json`, function(data) {
+        let versionElement = $("#versions");
+
+        Object.keys(data).forEach(function(key) {
+          let value = data[key];
+
+          let item = `<dd><a href="${baseUri}/versions/${key}/html/">${value}</a></dd>`
+
+          versionElement.append(item);
+        });
+      });
+    }
+  </script>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Read the Docs</span>
+      v: master
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      
+      <dl id="versions">
+        <dt>Versions</dt>
+      </dl>
+      
+      
+    </div>
+  </div>
+<script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });

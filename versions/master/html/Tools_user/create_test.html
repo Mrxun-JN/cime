@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../">
 <head>
@@ -5,21 +7,19 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>create_test &mdash; CIME master documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
-      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=d05bb7fd" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=30d551ce"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../_static/pop_ver.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=30d551ce"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -38,9 +38,6 @@
           <a href="../index.html" class="icon icon-home">
             CIME
           </a>
-              <div class="version">
-                master
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -51,8 +48,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../what_cime/index.html">What is CIME?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../users_guide/index.html">Case Control System Part 1: Basic Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../users_guide/index.html#case-control-system-part-2-configuration-porting-testing-and-use-cases">Case Control System Part 2: Configuration, Porting, Testing and Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/index.html">Using the Case Control System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/index.html#configuring-the-case-control-system">Configuring the Case Control System</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../build_cpl/index.html">Building a Coupled Model with CIME</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../misc_tools/index.html">Miscellaneous Tools</a></li>
 </ul>
@@ -156,12 +153,14 @@ usage: create_test [-h] [-d] [-v] [-s] [--no-run] [--no-build] [--no-setup]
                    [--clean] [-m MACHINE] [--mpilib MPILIB] [-c COMPARE]
                    [-g GENERATE] [--xml-machine XML_MACHINE]
                    [--xml-compiler XML_COMPILER] [--xml-category XML_CATEGORY]
-                   [--xml-testlist XML_TESTLIST] [--driver {mct,nuopc}]
+                   [--xml-testlist XML_TESTLIST] [--driver {nuopc}]
                    [--compiler COMPILER] [-n] [-p PROJECT] [-t TEST_ID]
                    [-j PARALLEL_JOBS] [--proc-pool PROC_POOL]
-                   [--walltime WALLTIME] [-q QUEUE] [-f TESTFILE] [-o]
-                   [--wait] [--allow-pnl] [--check-throughput]
-                   [--check-memory] [--ignore-namelists] [--ignore-memleak]
+                   [--walltime WALLTIME] [-q QUEUE] [-f TESTFILE]
+                   [--allow-baseline-overwrite |
+                   --skip-tests-with-existing-baselines] [--wait]
+                   [--allow-pnl] [--check-throughput] [--check-memory]
+                   [--ignore-namelists] [--ignore-diffs] [--ignore-memleak]
                    [--force-procs FORCE_PROCS] [--force-threads FORCE_THREADS]
                    [-i INPUT_DIR] [--pesfile PESFILE] [--retry RETRY] [-N]
                    [--workflow WORKFLOW] [--chksum] [--srcroot SRCROOT]
@@ -187,7 +186,7 @@ options:
                         E3SM tests belonging to a suite with share enabled will always share exes.
   --single-submit       Use a single interactive allocation to run all the tests. This can 
                         drastically reduce queue waiting but only makes sense on batch machines.
-  -r TEST_ROOT, --test-root TEST_ROOT
+  -r, --test-root TEST_ROOT
                         Where test cases will be created. The default is output root
                         as defined in the config_machines file
   --output-root OUTPUT_ROOT
@@ -197,7 +196,7 @@ options:
                         be used for Bit-for-bit generate and/or compare testing.
   --clean               Specifies if tests should be cleaned after run. If set, all object
                         executables and data files will be removed after the tests are run.
-  -m MACHINE, --machine MACHINE
+  -m, --machine MACHINE
                         The machine for creating and building tests. This machine must be defined
                         in the config_machines.xml file for the given model. The default is to 
                         to match the name of the machine in the test name or the name of the 
@@ -206,9 +205,9 @@ options:
                         only be used if you are an expert.
   --mpilib MPILIB       Specify the mpilib. To see list of supported MPI libraries for each machine, 
                         invoke ./query_config. The default is the first listing .
-  -c COMPARE, --compare COMPARE
+  -c, --compare COMPARE
                         While testing, compare baselines against the given compare directory. 
-  -g GENERATE, --generate GENERATE
+  -g, --generate GENERATE
                         While testing, generate baselines in the given generate directory. 
                         NOTE: this can also be done after the fact with bless_test_results
   --xml-machine XML_MACHINE
@@ -222,16 +221,16 @@ options:
                         The default is all if any --xml- argument is used.
   --xml-testlist XML_TESTLIST
                         Use this testlist to lookup tests.The default is specified in config_files.xml
-  --driver {mct,nuopc}  Override driver specified in tests and use this one.
+  --driver {nuopc}      Override driver specified in tests and use this one.
   --compiler COMPILER   Compiler for building cime. Default will be the name in the 
                         Testname or the default defined for the machine.
   -n, --namelists-only  Only perform namelist actions for tests
-  -p PROJECT, --project PROJECT
+  -p, --project PROJECT
                         Specify a project id for the case (optional).
                         Used for accounting and directory permissions when on a batch system.
                         The default is user or machine specified by PROJECT.
                         Accounting (only) may be overridden by user or machine specified CHARGE_ACCOUNT.
-  -t TEST_ID, --test-id TEST_ID
+  -t, --test-id TEST_ID
                         Specify an &#39;id&#39; for the test. This is simply a string that is appended 
                         to the end of a test name. If no test-id is specified, a time stamp plus a 
                         random string will be used (ensuring a high probability of uniqueness). 
@@ -239,7 +238,7 @@ options:
                         each run of create_test uses a unique test-id. WARNING: problems will occur 
                         if you use the same test-id twice on the same file system, even if the test 
                         lists are completely different.
-  -j PARALLEL_JOBS, --parallel-jobs PARALLEL_JOBS
+  -j, --parallel-jobs PARALLEL_JOBS
                         Number of tasks create_test should perform simultaneously. The default 
                          is min(num_cores, num_tests).
   --proc-pool PROC_POOL
@@ -247,25 +246,31 @@ options:
                         MAX_MPITASKS_PER_NODE + 25 percent.
   --walltime WALLTIME   Set the wallclock limit for all tests in the suite. 
                         Use the variable CIME_GLOBAL_WALLTIME to set this for all tests.
-  -q QUEUE, --queue QUEUE
-                        Force batch system to use a certain queue
-  -f TESTFILE, --testfile TESTFILE
+  -q, --queue QUEUE     Force batch system to use a certain queue
+  -f, --testfile TESTFILE
                         A file containing an ascii list of tests to run
-  -o, --allow-baseline-overwrite
+  --allow-baseline-overwrite, -o
                         If the --generate option is given, then an attempt to overwrite 
                         an existing baseline directory will raise an error. WARNING: Specifying this 
-                        option will allow existing baseline directories to be silently overwritten.
+                        option will allow existing baseline directories to be silently overwritten. 
+                        Incompatible with --skip-tests-with-existing-baselines.
+  --skip-tests-with-existing-baselines
+                        If the --generate option is given, then an attempt to overwrite 
+                        an existing baseline directory will raise an error. WARNING: Specifying this 
+                        option will allow tests with existing baseline directories to be silently skipped. 
+                        Incompatible with -o/--allow-baseline-overwrite.
   --wait                On batch systems, wait for submitted jobs to complete
   --allow-pnl           Do not pass skip-pnl to case.submit
   --check-throughput    Fail if throughput check fails. Requires --wait on batch systems
   --check-memory        Fail if memory check fails. Requires --wait on batch systems
   --ignore-namelists    Do not fail if there namelist diffs
+  --ignore-diffs        Do not fail if there history file diffs
   --ignore-memleak      Do not fail if there&#39;s a memleak
   --force-procs FORCE_PROCS
                         For all tests to run with this number of processors
   --force-threads FORCE_THREADS
                         For all tests to run with this number of threads
-  -i INPUT_DIR, --input-dir INPUT_DIR
+  -i, --input-dir INPUT_DIR
                         Use a non-default location for input files
   --pesfile PESFILE     Full pathname of an optional pes specification file. The file
                         can follow either the config_pes.xml or the env_mach_pes.xml format.
@@ -277,7 +282,7 @@ options:
   --force-rebuild       When used with &#39;use-existing&#39; and &#39;test-id&#39;, thetests will have their &#39;BUILD_SHAREDLIB&#39; phase reset to &#39;PEND&#39;.
   --mail-user MAIL_USER
                         Email to be used for batch notification.
-  -M MAIL_TYPE, --mail-type MAIL_TYPE
+  -M, --mail-type MAIL_TYPE
                         When to send user email. Options are: never, all, begin, end, fail.
                         You can specify multiple types with either comma-separated args or multiple -M flags.
 
@@ -316,7 +321,44 @@ Logging options:
       </div>
     </section>
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
+    let baseUriRegex = /(.*\/cime)\/.*/g;
+    let parsedUri = baseUriRegex.exec(document.baseURI);
+
+    if (parsedUri != null && parsedUri.length == 2) {
+      let baseUri = parsedUri[1];
+
+      $.get(`${baseUri}/versions/versions.json`, function(data) {
+        let versionElement = $("#versions");
+
+        Object.keys(data).forEach(function(key) {
+          let value = data[key];
+
+          let item = `<dd><a href="${baseUri}/versions/${key}/html/">${value}</a></dd>`
+
+          versionElement.append(item);
+        });
+      });
+    }
+  </script>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Read the Docs</span>
+      v: master
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      
+      <dl id="versions">
+        <dt>Versions</dt>
+      </dl>
+      
+      
+    </div>
+  </div>
+<script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
